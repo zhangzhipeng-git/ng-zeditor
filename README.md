@@ -7,13 +7,28 @@
 [在线演示](https://zzp-dog.github.io/ng-zeditor/dist2/test/index.html)  
 [github](https://github.com/zzp-dog/ng-zeditor)  
 
-## UI
+## First Part
+
+这整个文件是包含ng-zeditor组件的测试项目，可使用下述命令进行安装初始化
+
+```shell
+yarn install
+# or
+npm install
+# or other node package manager
+```
+
+具体的组件（ng-zeditor）描述在第二部分
+
+## Second Part
+
+### UI
 
 ![image](截图0.jpg)
 
 ![image](截图1.jpg)
 
-## Install
+### Install
 
 ```shell
 yarn add @bigbigbird/ng-zeditor@latest -S
@@ -21,7 +36,7 @@ yarn add @bigbigbird/ng-zeditor@latest -S
 npm install @bigbigbird/ng-zeditor@latest -S
 ```
 
-## Quick Start
+### Quick Start
 
 in app.module.ts
 
@@ -157,16 +172,16 @@ in app.component.html
 }" [(ngModel)]="html"></textarea>
 ```
 
-## Browser Support
+### Browser Support
 
 PC端标准浏览器和IE9+.
 
-## Security
+### Security
 
 在前端可以使用xss对html进行无害化处理  
 在后端可以使用jsoup对html进行无害化处理
 
-## Concat
+### Concat
 
 QQ交流群：486273737  
 Name:  木懵の狗纸  
