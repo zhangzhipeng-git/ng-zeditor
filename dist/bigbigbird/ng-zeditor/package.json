@@ -1,0 +1,19 @@
+{
+  "name": "@bigbigbird/ng-zeditor",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^8.0.3",
+    "@angular/core": "^8.0.3"
+  },
+  "main": "bundles/bigbigbird-ng-zeditor.umd.js",
+  "module": "fesm2015/bigbigbird-ng-zeditor.js",
+  "es2015": "fesm2015/bigbigbird-ng-zeditor.js",
+  "esm2015": "esm2015/bigbigbird-ng-zeditor.js",
+  "fesm2015": "fesm2015/bigbigbird-ng-zeditor.js",
+  "typings": "bigbigbird-ng-zeditor.d.ts",
+  "metadata": "bigbigbird-ng-zeditor.metadata.json",
+  "sideEffects": false,
+  "dependencies": {
+    "tslib": "^1.9.0"
+  }
+}
