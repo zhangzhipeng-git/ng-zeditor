@@ -1,0 +1,28 @@
+/*
+ * Created Date: Friday, August 21st 2020, 10:32:15 pm
+ * Author: 木懵の狗纸
+ * ---------------------------------------------------
+ * Description: 弹出公用样式
+ * ---------------------------------------------------
+ * Last Modified: Saturday August 22nd 2020 11:27:54 am
+ * Modified By: 木懵の狗纸
+ * Contact: 1029512956@qq.com
+ * Copyright (c) 2020 ZXWORK
+ */
+
+.z-editor-alert {
+    // 遮罩和弹出层容器
+    .wd-mask,
+    .wd-content {
+        position:fixed;
+        z-index:99999;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+    }
+    // 弹出内容容器，可滚动
+    .wd-content{
+        overflow: auto;
+    }
+}

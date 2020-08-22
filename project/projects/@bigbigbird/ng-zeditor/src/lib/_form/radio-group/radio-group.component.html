@@ -1,0 +1,12 @@
+
+<span>
+  <label [for]="v.value+i" class="z-editor-radios" *ngFor="let v of radioGroup, index as i">
+    <input type="radio" class="input-radio" [id]="v.value+i" [value]="v.value" [disabled]="v.disabled" [(ngModel)]="model" (ngModelChange)="onChange(v.value)" />
+    <i [ngClass]="[
+          'z-editor-icomoon',
+          v.disabled ? 'wd-radio-disabled' : '',
+          model === v.value ? 'icon-check-circle-thin' : 'icon-circle-thin'
+        ]"></i>
+    <span>{{ v.text }}</span>
+  </label>
+</span>

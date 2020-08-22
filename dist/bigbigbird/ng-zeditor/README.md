@@ -4,7 +4,7 @@
 
 一款简单、小清新的编辑器  
 
-[在线演示](https://zzp-dog.github.io/ng-zeditor/dist2/index.html)  
+[在线演示](https://zzp-dog.github.io/ng-zeditor/dist2/test/index.html)  
 [github](https://github.com/zzp-dog/ng-zeditor)  
 
 ## UI
@@ -16,9 +16,9 @@
 ## Install
 
 ```shell
-npm install @bigbigbird/ng-zeditor@latest -S
-# or
 yarn add @bigbigbird/ng-zeditor@latest -S
+# or
+npm install @bigbigbird/ng-zeditor@latest -S
 ```
 
 ## Quick Start

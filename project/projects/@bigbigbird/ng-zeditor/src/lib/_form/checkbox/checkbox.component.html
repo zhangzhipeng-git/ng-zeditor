@@ -1,0 +1,21 @@
+<ng-container *ngIf="model === false || model === true; else list">
+  <label class="z-editor-checkbox" [for]="id">
+    <input type="checkbox" [id]="id" [(ngModel)]="model" [disabled]="disabled" (ngModelChange)="myOnChange(model)" />
+    <i [ngClass]="[
+          'z-editor-icomoon',
+          disabled ? 'wd-checkbox-disabled' : '',
+          model ? 'icon-check-square' : 'icon-square-o'
+        ]"></i>
+  </label>
+</ng-container>
+<ng-template #list>
+  <label *ngFor="let m of checkBoxGroup, index as i" class="z-editor-checkbox" [for]="id+i">
+    <input type="checkbox" [id]="id+i" [(ngModel)]="m.checked" [disabled]="m.disabled" (ngModelChange)="myOnChange(m.value)" />
+    <i [ngClass]="[
+          'z-editor-icomoon',
+          m.disabled ? 'wd-checkbox-disabled' : '',
+          m.checked ? 'icon-check-square' : 'icon-square-o'
+        ]"></i>
+    <span>{{m.text}}</span>
+  </label>
+</ng-template>
