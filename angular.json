@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "project": {
+    "ng-zeditor": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -62,18 +62,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "project:build"
+            "browserTarget": "ng-zeditor:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "project:build:production"
+              "browserTarget": "ng-zeditor:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "project:build"
+            "browserTarget": "ng-zeditor:build"
           }
         },
         "test": {
@@ -110,11 +110,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "project:serve"
+            "devServerTarget": "ng-zeditor:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "project:serve:production"
+              "devServerTarget": "ng-zeditor:serve:production"
             }
           }
         }
@@ -155,5 +155,5 @@
         }
       }
     }},
-  "defaultProject": "project"
+  "defaultProject": "ng-zeditor"
 }
