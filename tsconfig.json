@@ -18,6 +18,14 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@bigbigbird/ng-zeditor": [
+        "dist/bigbigbird/ng-zeditor"
+      ],
+      "@bigbigbird/ng-zeditor/*": [
+        "dist/bigbigbird/ng-zeditor/*"
+      ]
+    }
   }
 }
