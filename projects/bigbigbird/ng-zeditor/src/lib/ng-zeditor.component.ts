@@ -10,14 +10,15 @@
  * Copyright (c) 2020 ZXWORK
  */
 
+// tslint:disable-next-line: max-line-length
 import { Component, Input, ViewChild, OnInit, ElementRef, Renderer2, Output, EventEmitter, forwardRef, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { WindowOptions } from "./_alert/window/window";   // 窗体弹窗
-import { UILinkComponent } from "./ui-link/ui-link";      // 超链接UI组件
-import { UITableComponent } from "./ui-table/ui-table";   // 表格UI组件
-import { UIAnnexComponent } from "./ui-annex/ui-annex";   // 附件UI组件
+import { WindowOptions } from './_alert/window/window';   // 窗体弹窗
+import { UILinkComponent } from './ui-link/ui-link';      // 超链接UI组件
+import { UITableComponent } from './ui-table/ui-table';   // 表格UI组件
+import { UIAnnexComponent } from './ui-annex/ui-annex';   // 附件UI组件
 import { DomService } from './service/DomService';        // dom提供商
-import CommonUtil from "./util/CommonUtil";               // dom工具类
+import CommonUtil from './util/CommonUtil';               // dom工具类
 import CursorUtil from './util/CursorUtil';               // 光标工具类
 
 /** 编辑器配置参数 */
@@ -57,6 +58,58 @@ interface Options {
     encapsulation: ViewEncapsulation.None
 })
 export class AppZeditorComponent implements ControlValueAccessor, OnInit {
+    @Input()
+    set options(v: any) {
+        Object.assign(this.options$, v);
+    }
+    /** 编辑条 */
+    get header(): HTMLElement {
+        return this.headerRef.nativeElement;
+    }
+    /** 编辑器 */
+    get editor(): HTMLElement {
+        return this.editorRef.nativeElement;
+    }
+    /** 编辑面板 */
+    get pannel(): HTMLElement {
+        return this.pannelRef.nativeElement;
+    }
+    get footer(): HTMLElement {
+        return this.footerRef.nativeElement;
+    }
+    get fontNameEl(): HTMLElement {
+        return this.fontNameRef.nativeElement;
+    }
+    get fontSizeEl(): HTMLElement {
+        return this.fontSizeRef.nativeElement;
+    }
+    get formatBlockEl(): HTMLElement {
+        return this.formatBlockRef.nativeElement;
+    }
+    get foreColorEl(): HTMLElement {
+        return this.foreColorRef.nativeElement;
+    }
+    get backColorEl(): HTMLElement {
+        return this.backColorRef.nativeElement;
+    }
+    get codeEl(): HTMLElement {
+        return this.codeRef.nativeElement;
+    }
+
+    constructor(
+        private render2: Renderer2,
+        private domService: DomService
+    ) {
+    }
+    /** 默认格式 */
+    static FORMAT = {
+        formatBlock: 'p',
+        foreColor: 'black',
+        backColor: 'white',
+        justifyActive: 'justifyLeft',
+        fontSize: { key: 'small', value: '3' },
+        fontFamily: { key: '微软雅黑', value: 'Microsoft Yahei' }
+    };
     /** 传入的html */
     @Input() vhtml = '<p>请输入内容~</p>';
     // tslint:disable-next-line: no-output-on-prefix
@@ -67,121 +120,73 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     disabled: boolean;
     /** 参数配置 */
     options$: any = { maxsize: 65535, timeout: 10000, image: { count: 5, base64: 60000 }, audio: { count: 1 }, video: { count: 1 } };
-    @Input()
-    set options(v: any) {
-        Object.assign(this.options$, v);
-    }
     /** 主题 */
     @Input() theme: 'r' | 'p' | 'b' | 'g' = 'g';
     /** 上传文件 */
     @Output() uploadFile: EventEmitter<{}> = new EventEmitter<{}>();
     /** 编辑条视图引用 */
     @ViewChild('headerRef', { read: ElementRef, static: true }) headerRef: ElementRef;
-    /** 编辑条 */
-    get header(): HTMLElement {
-        return this.headerRef.nativeElement;
-    }
     /** 编辑器整体视图引用 */
     @ViewChild('editorRef', { read: ElementRef, static: true }) editorRef: ElementRef;
-    /** 编辑器 */
-    get editor(): HTMLElement {
-        return this.editorRef.nativeElement;
-    }
     /** pannel视图引用 */
     @ViewChild('pannelRef', { read: ElementRef, static: true }) pannelRef: ElementRef;
-    /** 编辑面板 */
-    get pannel(): HTMLElement {
-        return this.pannelRef.nativeElement;
-    }
     @ViewChild('footerRef', { read: ElementRef, static: true }) footerRef: ElementRef;
-    get footer(): HTMLElement {
-        return this.footerRef.nativeElement;
-    }
     @ViewChild('fontNameRef', { read: ElementRef, static: true }) fontNameRef: ElementRef;
-    get fontNameEl(): HTMLElement {
-        return this.fontNameRef.nativeElement;
-    }
     @ViewChild('fontSizeRef', { read: ElementRef, static: true }) fontSizeRef: ElementRef;
-    get fontSizeEl(): HTMLElement {
-        return this.fontSizeRef.nativeElement;
-    }
     @ViewChild('formatBlockRef', { read: ElementRef, static: true }) formatBlockRef: ElementRef;
-    get formatBlockEl(): HTMLElement {
-        return this.formatBlockRef.nativeElement;
-    }
     @ViewChild('foreColorRef', { read: ElementRef, static: true }) foreColorRef: ElementRef;
-    get foreColorEl(): HTMLElement {
-        return this.foreColorRef.nativeElement;
-    }
     @ViewChild('backColorRef', { read: ElementRef, static: true }) backColorRef: ElementRef;
-    get backColorEl(): HTMLElement {
-        return this.backColorRef.nativeElement;
-    }
     @ViewChild('codeRef', { read: ElementRef, static: true }) codeRef: ElementRef;
-    get codeEl(): HTMLElement {
-        return this.codeRef.nativeElement;
-    }
     /** 字体样式 */
-    fontFamilys = [{ key: "arial", value: "arial" }, { key: "微软雅黑", value: "Microsoft Yahei" }, { key: "宋体", value: "SimSun" }, { key: "黑体", value: "SimHei" }, { key: "楷体", value: "KaiTi" }, { key: "宋体", value: "SimSun" }, { key: "新宋体", value: "NSimSun" }, { key: "仿宋", value: "FangSong" }, { key: "微软正黑体", value: "Microsoft JhengHei" }, { key: "华文琥珀", value: "STHupo" }, { key: "华文彩云", value: "STCaiyun" }, { key: "幼圆", value: "YouYuan" }, { key: "华文行楷", value: "STXingkai" }];
+    // tslint:disable-next-line: max-line-length
+    fontFamilys = [{ key: 'arial', value: 'arial' }, { key: '微软雅黑', value: 'Microsoft Yahei' }, { key: '宋体', value: 'SimSun' }, { key: '黑体', value: 'SimHei' }, { key: '楷体', value: 'KaiTi' }, { key: '宋体', value: 'SimSun' }, { key: '新宋体', value: 'NSimSun' }, { key: '仿宋', value: 'FangSong' }, { key: '微软正黑体', value: 'Microsoft JhengHei' }, { key: '华文琥珀', value: 'STHupo' }, { key: '华文彩云', value: 'STCaiyun' }, { key: '幼圆', value: 'YouYuan' }, { key: '华文行楷', value: 'STXingkai' }];
     /** 文本格式 */
-    formatBlocks = [{ key: "p", value: '<p data-index="0">p</p>' }, { key: "h6", value: '<h6 data-index="1">h6</h6>' }, { key: "h5", value: '<h5 data-index="2">h5</h5>' }, { key: "h4", value: '<h4 data-index="3">h4</h4>' }, { key: "h3", value: '<h3 data-index="4">h3</h3>' }, { key: "h2", value: '<h2 data-index="5">h2</h2>' }, { key: "h1", value: '<h1 data-index="6">h1</h1>' }];
+    // tslint:disable-next-line: max-line-length
+    formatBlocks = [{ key: 'p', value: '<p data-index="0">p</p>' }, { key: 'h6', value: '<h6 data-index="1">h6</h6>' }, { key: 'h5', value: '<h5 data-index="2">h5</h5>' }, { key: 'h4', value: '<h4 data-index="3">h4</h4>' }, { key: 'h3', value: '<h3 data-index="4">h3</h3>' }, { key: 'h2', value: '<h2 data-index="5">h2</h2>' }, { key: 'h1', value: '<h1 data-index="6">h1</h1>' }];
     /** 颜色 */
-    colors = [["#ffffff", "#000000", "#eeece1", "#1f497d", "#4f81bd", "#c0504d", "#9bbb59", "#8064a2", "#4bacc6", "#f79646"], ["#f2f2f2", "#7f7f7f", "#ddd9c3", "#c6d9f0", "#dbe5f1", "#f2dcdb", "#ebf1dd", "#e5e0ec", "#dbeef3", "#fdeada"], ["#d8d8d8", "#595959", "#c4bd97", "#8db3e2", "#b8cce4", "#e5b9b7", "#d7e3bc", "#ccc1d9", "#b7dde8", "#fbd5b5"], ["#bfbfbf", "#3f3f3f", "#938953", "#548dd4", "#95b3d7", "#d99694", "#c3d69b", "#b2a2c7", "#92cddc", "#fac08f"], ["#a5a5a5", "#262626", "#494429", "#17365d", "#366092", "#953734", "#76923c", "#5f497a", "#31859b", "#e36c09"], ["#7f7f7f", "#0c0c0c", "#1d1b10", "#0f243e", "#244061", "#632423", "#4f6128", "#3f3151", "#205867", "#974806"], ["#c00000", "#ff0000", "#ffc000", "#ffff00", "#92d050", "#00b050", "#00b0f0", "#0070c0", "#002060", "#7030a0"]];
+    // tslint:disable-next-line: max-line-length
+    colors = [['#ffffff', '#000000', '#eeece1', '#1f497d', '#4f81bd', '#c0504d', '#9bbb59', '#8064a2', '#4bacc6', '#f79646'], ['#f2f2f2', '#7f7f7f', '#ddd9c3', '#c6d9f0', '#dbe5f1', '#f2dcdb', '#ebf1dd', '#e5e0ec', '#dbeef3', '#fdeada'], ['#d8d8d8', '#595959', '#c4bd97', '#8db3e2', '#b8cce4', '#e5b9b7', '#d7e3bc', '#ccc1d9', '#b7dde8', '#fbd5b5'], ['#bfbfbf', '#3f3f3f', '#938953', '#548dd4', '#95b3d7', '#d99694', '#c3d69b', '#b2a2c7', '#92cddc', '#fac08f'], ['#a5a5a5', '#262626', '#494429', '#17365d', '#366092', '#953734', '#76923c', '#5f497a', '#31859b', '#e36c09'], ['#7f7f7f', '#0c0c0c', '#1d1b10', '#0f243e', '#244061', '#632423', '#4f6128', '#3f3151', '#205867', '#974806'], ['#c00000', '#ff0000', '#ffc000', '#ffff00', '#92d050', '#00b050', '#00b0f0', '#0070c0', '#002060', '#7030a0']];
     /** 字体大小 */
-    fontSizes = [{ key: "xx-small", value: "1", value$: 9 / 16 }, { key: "x-small", value: "2", value$: 10 / 16 }, { key: "small", value: "3", value$: 'inherit' /** 13/16调整为“继承” */ }, { key: "medium", value: "4", value$: 16 / 16 }, { key: "large", value: "5", value$: 18 / 16 }, { key: "x-large", value: "6", value$: 24 / 16 }, { key: "xx-large", value: "7", value$: 32 / 16 }];
+    // tslint:disable-next-line: max-line-length
+    fontSizes = [{ key: 'xx-small', value: '1', value$: 9 / 16 }, { key: 'x-small', value: '2', value$: 10 / 16 }, { key: 'small', value: '3', value$: '' /** 13/16调整为空字符串 */ }, { key: 'medium', value: '4', value$: 16 / 16 }, { key: 'large', value: '5', value$: 18 / 16 }, { key: 'x-large', value: '6', value$: 24 / 16 }, { key: 'xx-large', value: '7', value$: 32 / 16 }];
     /** code */
-    codes = ['Html', 'Css', 'Js', 'TypeScript', 'Sass', 'Java', 'Xml', 'Sql', 'Shell'];
+    codes = ['Html', 'Css', 'Javascript', 'TypeScript', 'Sass', 'Java', 'Xml', 'Sql', 'Shell'];
     /** 选中的字样 */
-    fontFamily: any = { key: "微软雅黑", value: "Microsoft Yahei" };
+    fontFamily: any = { key: '微软雅黑', value: 'Microsoft Yahei' };
     /** 选中的字号 */
-    fontSize: any = { key: "small", value: 3 }; // 默认1rem;
+    fontSize: any = { key: 'small', value: 3 }; // 默认1rem;
     /** 文本格式 */
-    formatBlock = "p";
+    formatBlock = 'p';
     /** 字体颜色 */
-    foreColor = "black";
+    foreColor = 'black';
     /** 高亮色 */
-    backColor = "white";
+    backColor = 'white';
     /** 当前代码语言 */
-    code = 'Js';
+    code = 'Javascript';
     /** 是否打开字样面板 */
-    switchFontFamilyPannel: boolean = false;
+    switchFontFamilyPannel = false;
     /** 是否打开字号面板 */
-    switchFontSizePannel: boolean = false;
+    switchFontSizePannel = false;
     /** 是否打开文本格式面板 */
-    switchFormatBlockPannel: boolean = false;
+    switchFormatBlockPannel = false;
     /** 是否打开字体颜色面板 */
-    switchForeColorPannel: boolean = false;
+    switchForeColorPannel = false;
     /** 是否打开背景色面板 */
-    switchBackColorPannel: boolean = false;
+    switchBackColorPannel = false;
     /** 是否打开代码语言面板 */
-    switchCodePannel: boolean = false;
+    switchCodePannel = false;
     /** 默认左对齐 */
     justifyActive = 'justifyLeft';
     /** 是否处于编辑状态中 */
-    isInEditStatus: boolean = false;
+    isInEditStatus = false;
     /** 记住的range */
     range: any;
     /** 是否全屏, 默认false */
-    full: boolean = false;
+    full = false;
     /** 父元素 */
     parent!: HTMLElement;
-    /** 默认格式 */
-    static FORMAT = {
-        formatBlock: 'p',
-        foreColor: 'black',
-        backColor: 'white',
-        justifyActive: 'justifyLeft',
-        fontSize: { key: "small", value: "3" },
-        fontFamily: { key: "微软雅黑", value: "Microsoft Yahei" }
-    };
     onChange: (html: string) => void = () => undefined;
     onTouched: () => void = () => undefined;
-
-    constructor(
-        private render2: Renderer2,
-        private domService: DomService
-    ) {
-    }
     writeValue(obj: any): void {
         if (obj !== undefined) {
             this.vhtml = obj;
@@ -218,7 +223,6 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
 
     /**
      * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
-     * @param e
      */
     recoverRange() {
         if (!this.pannel) { return; }
@@ -248,7 +252,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
 
     /**
      * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
-     * @param  事件对象
+     * @param e 事件对象
      */
     ensureFocus(e: Event) {
         // 阻止失焦
@@ -292,10 +296,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         // 如果编辑器内没有文本标签，文字对齐命令不能第一个执行
         // 否则会将光标设到下一个文本标签内
         this.cmd(this.justifyActive, false);
-        this.cmd("fontName", false, this.fontFamily.value);
-        this.cmd("foreColor", false, this.foreColor);
-        this.cmd("backColor", false, this.backColor);
-        this.cmd('fontSize', false, this.fontSize.value);
+        // css中font-family默认是微软雅黑
+        if (this.fontFamily.key !== '微软雅黑') { this.cmd('fontName', false, this.fontFamily.value); }
+        this.cmd('foreColor', false, this.foreColor);
+        this.cmd('backColor', false, this.backColor);
+        // css中font-size默认是.75rem
+        if (this.fontSize.value !== '') { this.cmd('fontSize', false, this.fontSize.value); }
         // 对设置字体大小做特殊处理
         this.adjustFontSizeWithStyle(this.fontSize);
     }
@@ -307,11 +313,11 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     setFontName(e: any) {
         this.ensureFocus(e);
         const t = e.target;
-        const index = t.getAttribute("data-index");
+        const index = t.getAttribute('data-index');
         this.switchFontFamilyPannel = !this.switchFontFamilyPannel;
         if (index === null || index === undefined) { return; }
         this.fontFamily = this.fontFamilys[index * 1];
-        this.cmd("fontName", false, this.fontFamily.value);
+        this.cmd('fontName', false, this.fontFamily.value);
     }
 
     /**
@@ -320,20 +326,21 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     setFontSize(e: any) {
         this.ensureFocus(e);
         const t = e.target;
-        const index = t.getAttribute("data-index");
+        const index = t.getAttribute('data-index');
         this.switchFontSizePannel = !this.switchFontSizePannel;
         if (index === null || index === undefined) { return; }
         const fontSize = this.fontSizes[index * 1];
         this.fontSize = fontSize;
-        this.cmd("fontSize", false, fontSize.value);
+        this.cmd('fontSize', false, fontSize.value);
         this.adjustFontSizeWithStyle(fontSize as any);
     }
     /**
      * 调整字体大小
-     * @param  fontSize
-     * @param  value$
+     * @param fontSize 字体大小对象
      */
     adjustFontSizeWithStyle(fontSize: { value: number, value$: string }) {
+        // 默认字体不做处理
+        if (fontSize.value$ === '') { return; }
         const el = CursorUtil.getRangeCommonParent() as HTMLElement;
         const fonts = CommonUtil.parent(el, 2).querySelectorAll(`font[size="${fontSize.value}"]`);
         const value = fontSize.value$;
@@ -350,12 +357,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     setFormatBlock(e: any) {
         this.ensureFocus(e);
         const t = e.target;
-        const index = t.getAttribute("data-index");
+        const index = t.getAttribute('data-index');
         this.switchFormatBlockPannel = !this.switchFormatBlockPannel;
         if (index === null || index === undefined) { return; }
         const formatBlock = this.formatBlocks[index * 1];
         this.formatBlock = formatBlock.key;
-        this.cmd("formatBlock", false, "<" + this.formatBlock + ">");
+        this.cmd('formatBlock', false, '<' + this.formatBlock + '>');
     }
 
     /**
@@ -365,12 +372,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     setForeColor(e: any) {
         this.ensureFocus(e);
         const t = e.target;
-        const x = t.getAttribute("data-dim1");
-        const y = t.getAttribute("data-dim2");
+        const x = t.getAttribute('data-dim1');
+        const y = t.getAttribute('data-dim2');
         this.switchForeColorPannel = !this.switchForeColorPannel;
         if (x === null || y == null) { return; }
         this.foreColor = this.colors[x][y];
-        this.cmd("foreColor", false, this.foreColor);
+        this.cmd('foreColor', false, this.foreColor);
     }
 
     /**
@@ -380,12 +387,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     setBackColor(e: any) {
         this.ensureFocus(e);
         const t = e.target;
-        const x = t.getAttribute("data-dim1");
-        const y = t.getAttribute("data-dim2");
+        const x = t.getAttribute('data-dim1');
+        const y = t.getAttribute('data-dim2');
         this.switchBackColorPannel = !this.switchBackColorPannel;
         if (x === null || y == null) { return; }
         this.backColor = this.colors[x][y];
-        this.cmd("backColor", false, this.backColor);
+        this.cmd('backColor', false, this.backColor);
     }
 
     /**
@@ -431,7 +438,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     switchBold(e: any) {
         this.ensureFocus(e);
-        this.cmd("bold", false, "");
+        this.cmd('bold', false, '');
     }
 
     /**
@@ -439,7 +446,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     switchItalic(e: any) {
         this.ensureFocus(e);
-        this.cmd("italic", false, "");
+        this.cmd('italic', false, '');
     }
 
     /**
@@ -447,7 +454,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     switchUnderline(e: any) {
         this.ensureFocus(e);
-        this.cmd("underline", false, "");
+        this.cmd('underline', false, '');
     }
 
     /**
@@ -455,7 +462,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     switchStrikeThrough(e: any) {
         this.ensureFocus(e);
-        this.cmd("strikeThrough", false, "");
+        this.cmd('strikeThrough', false, '');
     }
 
     /**
@@ -463,7 +470,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     superscript(e: Event) {
         this.ensureFocus(e);
-        this.cmd("superscript", false, "");
+        this.cmd('superscript', false, '');
     }
 
     /**
@@ -471,13 +478,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     subscript(e: Event) {
         this.ensureFocus(e);
-        this.cmd("subscript", false, "");
+        this.cmd('subscript', false, '');
     }
 
     /**
      * 设置文字对齐方向
      * @param  e 事件
-     * @param  str
      */
     setJustifyactive(e: Event, str: 'Left' | 'Right' | 'Center' | 'Full') {
         this.ensureFocus(e);
@@ -490,7 +496,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     indent(e: any) {
         this.ensureFocus(e);
-        this.cmd("indent", false, "");
+        this.cmd('indent', false, '');
     }
 
     /**
@@ -498,7 +504,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     outdent(e: any) {
         this.ensureFocus(e);
-        this.cmd("outdent", false, "");
+        this.cmd('outdent', false, '');
     }
 
     /**
@@ -506,7 +512,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     insertOrderedList(e: any) {
         this.ensureFocus(e);
-        this.cmd("insertOrderedList", false, "");
+        this.cmd('insertOrderedList', false, '');
     }
 
     /**
@@ -514,7 +520,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     insertUnorderedList(e: any) {
         this.ensureFocus(e);
-        this.cmd("insertUnorderedList", false, "");
+        this.cmd('insertUnorderedList', false, '');
     }
 
     /**
@@ -525,7 +531,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
             this.toast('代码区无法插入表格~');
             return;
         }
-        this.alert({ title: "插入表格", animation: "scale", content: UITableComponent, handler: this, theme: this.theme });
+        this.alert({ title: '插入表格', animation: 'scale', content: UITableComponent, handler: this, theme: this.theme });
     }
     /**
      * 点击表格UI弹窗确认时回调
@@ -546,7 +552,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
             this.toast('代码区无法插入链接~');
             return;
         }
-        this.alert({ title: "插入链接", animation: "scale", content: UILinkComponent, handler: this, theme: this.theme });
+        this.alert({ title: '插入链接', animation: 'scale', content: UILinkComponent, handler: this, theme: this.theme });
     }
     /**
      * 点击超链接UI弹窗确认时回调
@@ -572,7 +578,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
             this.toast('代码区无法插入文件~');
             return;
         }
-        this.alert({ title: "插入文件", animation: "scale", content: UIAnnexComponent, handler: this, theme: this.theme });
+        this.alert({ title: '插入文件', animation: 'scale', content: UIAnnexComponent, handler: this, theme: this.theme });
     }
     /**
      * 点击上传文件UI弹窗上传本地文件时嵌入base64时回调
@@ -615,7 +621,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     insertHorizontalRule(e: any) {
         this.ensureFocus(e);
-        this.cmd("insertHorizontalRule", false, "");
+        this.cmd('insertHorizontalRule', false, '');
     }
 
     /**
@@ -623,7 +629,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     paste(e: any) {
         this.ensureFocus(e);
-        this.cmd("paste", false, "");
+        this.cmd('paste', false, '');
     }
 
     /**
@@ -631,7 +637,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     cut(e: any) {
         this.ensureFocus(e);
-        this.cmd("cut", false, "");
+        this.cmd('cut', false, '');
     }
 
     /**
@@ -639,7 +645,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     copy(e: any) {
         this.ensureFocus(e);
-        this.cmd("copy", false, "");
+        this.cmd('copy', false, '');
     }
 
     /**
@@ -647,7 +653,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     selectAll(e: any) {
         this.ensureFocus(e);
-        this.cmd("selectAll", false, "");
+        this.cmd('selectAll', false, '');
     }
 
     /**
@@ -655,7 +661,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     redo(e: any) {
         this.ensureFocus(e);
-        this.cmd("redo", false, "");
+        this.cmd('redo', false, '');
     }
 
     /**
@@ -663,7 +669,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     undo(e: any) {
         this.ensureFocus(e);
-        this.cmd("undo", false, "");
+        this.cmd('undo', false, '');
     }
 
     /**
@@ -671,7 +677,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     deleteSelect(e: any) {
         this.ensureFocus(e);
-        this.cmd("delete", false, "");
+        this.cmd('delete', false, '');
     }
 
     /**
@@ -685,7 +691,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      * 清除格式，不阻止失焦，重新聚焦时会设置历史格式
      */
     removeFormat() {
-        this.cmd("removeFormat", false);
+        this.cmd('removeFormat', false);
         this.initFormatData();
     }
 
@@ -766,7 +772,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
             this.toast('代码区内无法执行该命令~');
             return false;
         }
-        const r = document.execCommand(k, ui, v || "");
+        const r = document.execCommand(k, ui, v || '');
         return r;
     }
 
@@ -802,17 +808,19 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     }
 
     /**
-     * 在编辑面板中粘贴
+     * 在编辑面板中粘贴（若在代码区内粘贴则清除格式！！！）
      */
     pannelOnPaste(e: any) {
         if (!this.isRangeInCode()) { return; }
-        const obj = CommonUtil.isIE() as any ? window : e;
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        const obj = <any> CommonUtil.isIE() ? window : e;
         if (!obj.clipboardData) { return; }
-        const text = obj.clipboardData.getData("text")
-            .replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        const p = document.createElement('P');
-        p.innerHTML = text;
-        CursorUtil.insertNode(p);
+        // 只复制文本，并将多个换行（文字换行和p标签在获取文本时会变成两个换行）转为单个换行
+        const text = obj.clipboardData.getData('text')
+            .replace(/(\r\n)+/gm, '\r\n');
+        const df = document.createDocumentFragment();
+        df.appendChild(document.createTextNode(text));
+        CursorUtil.insertNode(df);
         e.preventDefault();
         e.returnValue = false;
         this.setRangeAndEmitValue(0);
@@ -820,7 +828,6 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
 
     /**
      * 输入时记住光变位置 && input事件发射value && 记住输入
-     * @param  arg0
      */
     setRangeAndEmitValue(arg0: number | Event) {
         if (typeof arg0 !== 'number') {
@@ -934,7 +941,6 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
 
     /**
      * 弹窗
-     * @param obj
      */
     alert(obj: WindowOptions) {
         return this.domService.alert(obj);

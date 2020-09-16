@@ -1,10 +1,40 @@
 import { OnInit, ElementRef, Renderer2, EventEmitter } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { WindowOptions } from "./_alert/window/window";
+import { WindowOptions } from './_alert/window/window';
 import { DomService } from './service/DomService';
 export declare class AppZeditorComponent implements ControlValueAccessor, OnInit {
     private render2;
     private domService;
+    options: any;
+    /** 编辑条 */
+    readonly header: HTMLElement;
+    /** 编辑器 */
+    readonly editor: HTMLElement;
+    /** 编辑面板 */
+    readonly pannel: HTMLElement;
+    readonly footer: HTMLElement;
+    readonly fontNameEl: HTMLElement;
+    readonly fontSizeEl: HTMLElement;
+    readonly formatBlockEl: HTMLElement;
+    readonly foreColorEl: HTMLElement;
+    readonly backColorEl: HTMLElement;
+    readonly codeEl: HTMLElement;
+    constructor(render2: Renderer2, domService: DomService);
+    /** 默认格式 */
+    static FORMAT: {
+        formatBlock: string;
+        foreColor: string;
+        backColor: string;
+        justifyActive: string;
+        fontSize: {
+            key: string;
+            value: string;
+        };
+        fontFamily: {
+            key: string;
+            value: string;
+        };
+    };
     /** 传入的html */
     vhtml: string;
     onInput: EventEmitter<string>;
@@ -14,37 +44,23 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     disabled: boolean;
     /** 参数配置 */
     options$: any;
-    options: any;
     /** 主题 */
     theme: 'r' | 'p' | 'b' | 'g';
     /** 上传文件 */
     uploadFile: EventEmitter<{}>;
     /** 编辑条视图引用 */
     headerRef: ElementRef;
-    /** 编辑条 */
-    readonly header: HTMLElement;
     /** 编辑器整体视图引用 */
     editorRef: ElementRef;
-    /** 编辑器 */
-    readonly editor: HTMLElement;
     /** pannel视图引用 */
     pannelRef: ElementRef;
-    /** 编辑面板 */
-    readonly pannel: HTMLElement;
     footerRef: ElementRef;
-    readonly footer: HTMLElement;
     fontNameRef: ElementRef;
-    readonly fontNameEl: HTMLElement;
     fontSizeRef: ElementRef;
-    readonly fontSizeEl: HTMLElement;
     formatBlockRef: ElementRef;
-    readonly formatBlockEl: HTMLElement;
     foreColorRef: ElementRef;
-    readonly foreColorEl: HTMLElement;
     backColorRef: ElementRef;
-    readonly backColorEl: HTMLElement;
     codeRef: ElementRef;
-    readonly codeEl: HTMLElement;
     /** 字体样式 */
     fontFamilys: {
         key: string;
@@ -65,7 +81,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     } | {
         key: string;
         value: string;
-        value$: string; /** 13/16调整为“继承” */
+        value$: string; /** 13/16调整为空字符串 */
     })[];
     /** code */
     codes: string[];
@@ -103,24 +119,8 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     full: boolean;
     /** 父元素 */
     parent: HTMLElement;
-    /** 默认格式 */
-    static FORMAT: {
-        formatBlock: string;
-        foreColor: string;
-        backColor: string;
-        justifyActive: string;
-        fontSize: {
-            key: string;
-            value: string;
-        };
-        fontFamily: {
-            key: string;
-            value: string;
-        };
-    };
     onChange: (html: string) => void;
     onTouched: () => void;
-    constructor(render2: Renderer2, domService: DomService);
     writeValue(obj: any): void;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
@@ -136,7 +136,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     pannelFocus(): void;
     /**
      * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
-     * @param e
      */
     recoverRange(): void;
     /**
@@ -147,7 +146,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     startEdit(recover?: boolean): void;
     /**
      * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
-     * @param  事件对象
+     * @param e 事件对象
      */
     ensureFocus(e: Event): void;
     /**
@@ -170,8 +169,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     setFontSize(e: any): void;
     /**
      * 调整字体大小
-     * @param  fontSize
-     * @param  value$
+     * @param fontSize 字体大小对象
      */
     adjustFontSizeWithStyle(fontSize: {
         value: number;
@@ -229,7 +227,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     /**
      * 设置文字对齐方向
      * @param  e 事件
-     * @param  str
      */
     setJustifyactive(e: Event, str: 'Left' | 'Right' | 'Center' | 'Full'): void;
     /**
@@ -366,12 +363,11 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     pannelOnClick(): void;
     /**
-     * 在编辑面板中粘贴
+     * 在编辑面板中粘贴（若在代码区内粘贴则清除格式！！！）
      */
     pannelOnPaste(e: any): void;
     /**
      * 输入时记住光变位置 && input事件发射value && 记住输入
-     * @param  arg0
      */
     setRangeAndEmitValue(arg0: number | Event): void;
     /**
@@ -404,7 +400,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     }): import("../bigbigbird-ng-zeditor").ɵc;
     /**
      * 弹窗
-     * @param obj
      */
     alert(obj: WindowOptions): void;
     /**
