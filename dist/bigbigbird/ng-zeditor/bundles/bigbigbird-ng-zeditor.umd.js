@@ -1980,7 +1980,7 @@
             /**
              * 选中的字号
              */
-            this.fontSize = { key: 'small', value: 3 }; // 默认1rem;
+            this.fontSize = { key: 'small', value: 3, value$: '' }; // 默认1rem;
             // 默认1rem;
             /**
              * 文本格式
@@ -2295,11 +2295,9 @@
             this.cmd('foreColor', false, this.foreColor);
             this.cmd('backColor', false, this.backColor);
             // css中font-size默认是.75rem
-            if (this.fontSize.value !== '') {
+            if (this.fontSize.value$ !== '') {
                 this.cmd('fontSize', false, this.fontSize.value);
             }
-            // 对设置字体大小做特殊处理
-            this.adjustFontSizeWithStyle(this.fontSize);
         };
         /**
          * 设置字样
@@ -2449,7 +2447,7 @@
             /** @type {?} */
             var code = this.code.toLowerCase();
             /** @type {?} */
-            var html = "<p><br/></p><pre style=\"white-space: pre\" title=\"\u4EE3\u7801\u533A\"><code class=\"" + code + "\"><p><br/></p></code></pre><p><br/></p>";
+            var html = "<pre style=\"white-space: pre\" title=\"\u4EE3\u7801\u533A\"><code class=\"" + code + "\"><p><br/></p></code></pre><p><br/></p>";
             this.removeFormat();
             this.cmd('insertHTML', false, html);
             /** @type {?} */
@@ -2902,10 +2900,8 @@
             if (!obj.clipboardData) {
                 return;
             }
-            // 只复制文本，并将多个换行（文字换行和p标签在获取文本时会变成两个换行）转为单个换行
             /** @type {?} */
-            var text = obj.clipboardData.getData('text')
-                .replace(/(\r\n)+/gm, '\r\n');
+            var text = obj.clipboardData.getData('text');
             /** @type {?} */
             var df = document.createDocumentFragment();
             df.appendChild(document.createTextNode(text));
