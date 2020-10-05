@@ -35,22 +35,8 @@ export default class CursorUtil {
     static getRange(index: number, elem?: HTMLElement): Range | TextRange;
     /**
      * 选中元素elem的内容
-     * @param  elem
      */
     static selectSelectionElementChilds(elem: HTMLElement): void;
-    /**
-     * 选中元素elem的内容
-     * @param  elem
-     * @param index ? 默认0 range下标
-     */
-    static selectRangeElementChilds(elem: HTMLElement, index?: number): void;
-    /**
-     * 将范围设置到元素并折叠
-     * @param  elem 元素，该元素可以是不可聚焦的元素
-     * @param isStart 是否折叠到开头
-     * @param index ? 默认0 range下标
-     */
-    static setRangeToElement(elem: HTMLElement, isStart: boolean, index?: number): void;
     /**
      * 设置选区到某个元素，并折叠
      * @param  elem 元素，该元素可以是不可聚焦的元素
@@ -68,19 +54,6 @@ export default class CursorUtil {
      * @returns string
      */
     static getRangeText(index?: number): string;
-    /**
-     * 设置range的起始和结束位置相对于各自的容器的偏移量
-     * @param  s 起始偏移
-     * @param  e 尾部偏移
-     * @param  index？默认0， 范围下标，旧标准就一个
-     */
-    static setRangeOffset(s: number, e: number, index?: number): void;
-    /**
-     * 设置选区的起始和结束位置相对于各自的容器的偏移量
-     * @param  s 起始位置偏移量
-     * @param  e? 结束位置偏移量
-     */
-    static setSelectionOffset(s: number, e?: number): void;
     /**
      * 获取range起始位置和结束位置的最浅的父元素
      *

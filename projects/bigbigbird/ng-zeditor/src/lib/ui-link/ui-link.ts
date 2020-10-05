@@ -19,13 +19,13 @@ import { DomService } from '../service/DomService';
 })
 export class UILinkComponent {
     /** 是否在新窗口打开 */
-    checked: boolean = false;
+    checked = false;
     /** 标题 */
-    title: string = '';
+    title = '';
     /** url */
-    url: string = 'https://';
+    url = 'https://';
     /** 内容 */
-    content: string = '';
+    content = '';
     handler: any;
     parent: any;
 
@@ -39,13 +39,13 @@ export class UILinkComponent {
     emitLinkHTML() {
         if (!/^(\/\/|https?:)\/\/.+/.test(this.url)) {
             this.domService.tost({
-                text: "链接地址不规范"
+                text: '链接地址不规范'
             });
             return;
         }
         if (!this.content) {
             this.domService.tost({
-                text: "请填写内容"
+                text: '请填写内容'
             });
             return;
         }
@@ -53,15 +53,14 @@ export class UILinkComponent {
             '<a href="' +
             this.url +
             '" ' +
-            (this.checked ? 'target="_blank"' : "") +
-            (this.title ? "title=" + this.title : "") +
-            ">" +
+            (this.checked ? 'target="_blank"' : '') +
+            (this.title ? 'title=' + this.title : '') +
+            '>' +
             this.content +
-            "</a>";
+            '</a>';
         if (this.handler.recieveLinkHTML(html)) {
             this.parent.close();
         }
     }
-
 }
 

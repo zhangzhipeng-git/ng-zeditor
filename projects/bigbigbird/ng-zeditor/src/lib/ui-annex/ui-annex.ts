@@ -10,7 +10,7 @@
  * Copyright (c) 2020 ZXWORK
  */
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { Radio} from '../_form/radio-group/radio-group';
+import { Radio } from '../_form/radio-group/radio-group';
 import { DomService } from '../service/DomService';
 import { TipComponent } from '../_alert/tip/tip';
 import { AppZeditorComponent } from '../ng-zeditor.component';
@@ -20,26 +20,26 @@ import { AppZeditorComponent } from '../ng-zeditor.component';
     templateUrl: './ui-annex.component.html'
 })
 export class UIAnnexComponent {
-    url: string = "https://";
-    width: string = "100%";
-    height: string = "200px";
-    /** 获取类型对应的名称 */
-    typeName: string = '图片';
-    /** 重渲染input file */
-    rebuild: boolean = true;
-    radioGroup: Radio[] = [{ value: "image", text: "图片" }, { value: "audio", text: "音频" }, { value: "video", text: "视频" }];
     /** 图片类型 */
-    static IMAGEARR = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/svg"];
-    static AUDIOARR = ["audio/mp3", "audio/ogg", "audio/wav"];
-    static VIDEOARR = ["video/mp4", "video/ogg", "video/webm"];
+    static IMAGEARR = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg'];
+    static AUDIOARR = ['audio/mp3', 'audio/ogg', 'audio/wav'];
+    static VIDEOARR = ['video/mp4', 'video/ogg', 'video/webm'];
+    url = 'https://';
+    width = '100%';
+    height = '200px';
+    /** 获取类型对应的名称 */
+    typeName = '图片';
+    /** 重渲染input file */
+    rebuild = true;
+    radioGroup: Radio[] = [{ value: 'image', text: '图片' }, { value: 'audio', text: '音频' }, { value: 'video', text: '视频' }];
     @ViewChild('file', { static: false, read: ElementRef }) file: ElementRef;
     // tslint:disable-next-line: variable-name
-    _type: 'image' | 'audio' | 'video' = "image";
+    _type: 'image' | 'audio' | 'video' = 'image';
     handler: any;
     parent: any;
     set type(v: 'image' | 'audio' | 'video') {
         this._type = v;
-        this.typeName = {image: '图片', audio: '音频', video: '视频'}[v];
+        this.typeName = { image: '图片', audio: '音频', video: '视频' }[v];
     }
     get type() {
         return this._type;
@@ -55,7 +55,7 @@ export class UIAnnexComponent {
     selectFile() {
         // 需要先设置宽度和高度
         const num = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?$/i;
-        if (!num.test(this.width + "") || !num.test(this.height + "")) {
+        if (!num.test(this.width + '') || !num.test(this.height + '')) {
             this.domService.tost({
                 text: `上传${this.typeName}前请填写合适的高度和宽度~`
             });
@@ -67,9 +67,13 @@ export class UIAnnexComponent {
             audio: UIAnnexComponent.AUDIOARR,
             video: UIAnnexComponent.VIDEOARR,
         }[this.type];
-        file.accept = arr.join(",");
+        file.accept = arr.join(',');
+        if ('onchange' in file) {
+            file.onchange = this.fileChange;
+        } else {
+            file.onpropertychange = this.fileChange;
+        }
         file.click();
-        file.onchange = this.fileChange;
     }
 
     /**
@@ -108,7 +112,7 @@ export class UIAnnexComponent {
         } else {
             // 交给外部进行处理
             const tip: TipComponent = this.domService.tost({
-                text: "上传中~",
+                text: '上传中~',
                 duration: -1
             });
             // tslint:disable-next-line: no-unused-expression
@@ -141,7 +145,7 @@ export class UIAnnexComponent {
         const hasperc = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?$/i;
         if (!hasperc.test(this.width)) {
             this.domService.tost({
-                text: "请填写合适的宽度~"
+                text: '请填写合适的宽度~'
             });
             return;
         }
@@ -153,7 +157,7 @@ export class UIAnnexComponent {
         }
         if (!/^(\/\/|https?:)\/\/.+/.test(this.url)) {
             this.domService.tost({
-                text: "链接地址不规范"
+                text: '链接地址不规范'
             });
             return;
         }
@@ -166,18 +170,17 @@ export class UIAnnexComponent {
 
     /**
      * 传入src并根据类型获取文件html
-     * @param  src
      */
     getFileHTML = (src: string) => {
         let html = '';
         switch (this.type) {
-            case "image":
+            case 'image':
                 html = this.getImageHTML(src);
                 break;
-            case "audio":
+            case 'audio':
                 html = this.getAudioHTML(src);
                 break;
-            case "video":
+            case 'video':
                 html = this.getVideoHTML(src);
                 break;
         }
@@ -200,7 +203,7 @@ export class UIAnnexComponent {
             ';width:' +
             this.width +
             ';object-fit:cover;" />' +
-            "</p><br/>"
+            '</p><br/>'
         );
     }
     /**
@@ -221,7 +224,6 @@ export class UIAnnexComponent {
 
     /**
      * 获取插入视频的HTML
-     * @param src
      */
     getVideoHTML(src: string) {
         const arr = UIAnnexComponent.VIDEOARR;

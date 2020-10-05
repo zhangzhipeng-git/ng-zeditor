@@ -8,8 +8,8 @@
       <!-- 下面使用mousedown事件是因为可以使用e.preventDefault()阻止默认事件，阻止编辑面板失焦 -->
       <!-- 而针对必定要失焦的情况，则采用记住光标，再设置上次记住的光标的方式来做到伪失焦。 -->
       <!-- 字体 -->
-      <div #fontNameRef class="wd-edit-link-box fontName" (mousedown)="setFontName($event)">
-        <a data-tip="字体" class="wd-edit-link" href="javascript:void 0">
+      <div #fontNameRef class="wd-edit-link-box fontName" (mousedown)="!inCode&&setFontName($event)">
+        <a data-tip="字体" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <span [ngStyle]="{'font-family': fontFamily.value}">{{fontFamily.key}}</span>
           <i class="z-editor-icomoon icon-caret-down"></i>
         </a>
@@ -20,21 +20,20 @@
         </ul>
       </div>
       <!-- 字号 -->
-      <div #fontSizeRef class="wd-edit-link-box fontSize" (mousedown)="setFontSize($event)">
-        <a data-tip="字号" class="wd-edit-link" href="javascript:void 0">
+      <div #fontSizeRef class="wd-edit-link-box fontSize" (mousedown)="!inCode&&setFontSize($event)">
+        <a data-tip="字号" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <span>{{fontSize.key}}</span>
           <i class="z-editor-icomoon icon-caret-down"></i>
         </a>
         <ul [hidden]="!switchFontSizePannel" class="wd-font-size-list">
           <li *ngFor="let fs of fontSizes, index as i">
-            <!-- 注意这里style的fontSize绑定的是x-small，small这种值 -->
-            <a href="javascript:void 0" [attr.data-index]="i" [ngStyle]="{'font-size': fs.key}">{{fs.key}}</a>
+            <a href="javascript:void 0" [attr.data-index]="i">{{fs.key}}</a>
           </li>
         </ul>
       </div>
       <!-- 文本格式 -->
-      <div #formatBlockRef class="wd-edit-link-box formatBlock" (mousedown)="setFormatBlock($event)">
-        <a data-tip="文本格式" class="wd-edit-link" href="javascript:void 0">
+      <div #formatBlockRef class="wd-edit-link-box formatBlock" (mousedown)="!inCode&&setFormatBlock($event)">
+        <a data-tip="文本格式" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <span>{{formatBlock}}</span>
           <i class="z-editor-icomoon icon-caret-down"></i>
         </a>
@@ -45,8 +44,8 @@
         </ul>
       </div>
       <!-- 文本色 -->
-      <div #foreColorRef class="wd-edit-link-box foreColor" (mousedown)="setForeColor($event)">
-        <a data-tip="字色" class="wd-edit-link" href="javascript:void 0">
+      <div #foreColorRef class="wd-edit-link-box foreColor" (mousedown)="!inCode&&setForeColor($event)">
+        <a data-tip="字色" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <i class="z-editor-icomoon icon-font-color" [ngStyle]="{'border-bottom-color': foreColor}"></i>
           <i class="z-editor-icomoon icon-caret-down"></i>
         </a>
@@ -64,8 +63,8 @@
         </div>
       </div>
       <!-- 高亮色 -->
-      <div #backColorRef class="wd-edit-link-box backColor" (mousedown)="setBackColor($event)">
-        <a data-tip="高亮" class="wd-edit-link" href="javascript:void 0">
+      <div #backColorRef class="wd-edit-link-box backColor" (mousedown)="!inCode&&setBackColor($event)">
+        <a data-tip="高亮" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <i class="z-editor-icomoon icon-pencil" [ngStyle]="{'border-bottom-color': backColor}"></i>
           <i class="z-editor-icomoon icon-caret-down"></i>
         </a>
@@ -83,126 +82,126 @@
         </div>
       </div>
       <!-- 是否加粗 -->
-      <div class="wd-edit-link-box bold" (mousedown)="switchBold($event)">
-        <a data-tip="加粗" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box bold" (mousedown)="!inCode&&switchBold($event)">
+        <a data-tip="加粗"  [ngClass]="{active:isBold,disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-bold"></i>
         </a>
       </div>
       <!-- 是否斜体 -->
-      <div class="wd-edit-link-box italic" (mousedown)="switchItalic($event)">
-        <a data-tip="斜体" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box italic" (mousedown)="!inCode&&switchItalic($event)">
+        <a data-tip="斜体" [ngClass]="{active:isItalic,disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-italic"></i>
         </a>
       </div>
       <!-- 是否下划线 -->
-      <div class="wd-edit-link-box underline" (mousedown)="switchUnderline($event)">
-        <a data-tip="下划线" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box underline" (mousedown)="!inCode&&switchUnderline($event)">
+        <a data-tip="下划线" [ngClass]="{active:isUnderline,disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-underline"></i>
         </a>
       </div>
       <!-- 删除线 -->
-      <div class="wd-edit-link-box strikeThrough" (mousedown)="switchStrikeThrough($event)">
-        <a data-tip="删除线" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box strikeThrough" (mousedown)="!inCode&&switchStrikeThrough($event)">
+        <a data-tip="删除线" [ngClass]="{active:isStrikeThrough,disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-strikethrough"></i>
         </a>
       </div>
-      <!-- 上标 - 不可关 -->
-      <div class="wd-edit-link-box superscript" (mousedown)="superscript($event)">
-        <a data-tip="上标" class="wd-edit-link" href="javascript: void 0">
+      <!-- 上标  -->
+      <div class="wd-edit-link-box superscript" (mousedown)="!inCode&&setScript($event, 'superscript')">
+        <a data-tip="上标" [ngClass]="{active:scriptActive==='superscript',disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-superscript"></i>
         </a>
       </div>
-      <!-- 下标 - 不可关-->
-      <div class="wd-edit-link-box subscript" (mousedown)="subscript($event)">
-        <a data-tip="下标" class="wd-edit-link" href="javascript: void 0">
+      <!-- 下标 -->
+      <div class="wd-edit-link-box subscript" (mousedown)="!inCode&&setScript($event, 'subscript')">
+        <a data-tip="下标" [ngClass]="{active:scriptActive==='subscript',disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-subscript"></i>
         </a>
       </div>
-      <!-- 居左 - 不可关-->
-      <div class="wd-edit-link-box justifyLeft" (mousedown)="setJustifyactive($event, 'Left')">
-        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyLeft'}" data-tip="居左" class="wd-edit-link"
+      <!-- 居左 -->
+      <div class="wd-edit-link-box justifyLeft" (mousedown)="!inCode&&setJustifyactive($event, 'Left')">
+        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyLeft',disabled:inCode}" data-tip="居左" class="wd-edit-link"
           href="javascript: void 0">
           <i class="z-editor-icomoon icon-paragraph-left"></i>
         </a>
       </div>
-      <!-- 居中 - 不可关-->
-      <div class="wd-edit-link-box justifyCenter" (mousedown)="setJustifyactive($event, 'Center')">
-        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyCenter'}" data-tip="居中" class="wd-edit-link"
+      <!-- 居中 -->
+      <div class="wd-edit-link-box justifyCenter" (mousedown)="!inCode&&setJustifyactive($event, 'Center')">
+        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyCenter',disabled:inCode}" data-tip="居中" class="wd-edit-link"
           href="javascript: void 0">
           <i class="z-editor-icomoon icon-paragraph-center"></i>
         </a>
       </div>
-      <!-- 居右 - 不可关-->
-      <div class="wd-edit-link-box justifyRight" (mousedown)="setJustifyactive($event, 'Right')">
-        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyRight'}" data-tip="居右" class="wd-edit-link"
+      <!-- 居右 -->
+      <div class="wd-edit-link-box justifyRight" (mousedown)="!inCode&&setJustifyactive($event, 'Right')">
+        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyRight',disabled:inCode}" data-tip="居右" class="wd-edit-link"
           href="javascript: void 0">
           <i class="z-editor-icomoon icon-paragraph-right"></i>
         </a>
       </div>
-      <!-- 左右对齐 - 不可关-->
-      <div class="wd-edit-link-box justifyFull" (mousedown)="setJustifyactive($event, 'Full')">
-        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyFull'}" data-tip="左右对齐" class="wd-edit-link"
+      <!-- 左右对齐 -->
+      <div class="wd-edit-link-box justifyFull" (mousedown)="!inCode&&setJustifyactive($event, 'Full')">
+        <a [ngClass]="{'wd-edit-link-active': justifyActive === 'justifyFull',disabled:inCode}" data-tip="左右对齐" class="wd-edit-link"
           href="javascript: void 0">
           <i class="z-editor-icomoon icon-paragraph-justify"></i>
         </a>
       </div>
-      <!-- 文本缩进 - 不可关-->
-      <div class="wd-edit-link-box indent" (mousedown)="indent($event)">
-        <a data-tip="缩进" class="wd-edit-link" href="javascript: void 0">
+      <!-- 文本缩进 -->
+      <div class="wd-edit-link-box indent" (mousedown)="!inCode&&indent($event)">
+        <a data-tip="缩进" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-indent-increase"></i>
         </a>
       </div>
-      <!-- 文本增进  - 不可关-->
-      <div class="wd-edit-link-box outdent" (mousedown)="outdent($event)">
-        <a data-tip="减少缩进" class="wd-edit-link" href="javascript: void 0">
+      <!-- 文本增进  -->
+      <div class="wd-edit-link-box outdent" (mousedown)="!inCode&&outdent($event)">
+        <a data-tip="减少缩进" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-indent-decrease"></i>
         </a>
       </div>
       <!-- 清除格式 -->
-      <div class="wd-edit-link-box removeFormat" (mousedown)="removeFormat()">
-        <a data-tip="清除格式" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box removeFormat" (mousedown)="!inCode&&removeFormat()">
+        <a data-tip="清除格式" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-clear-formatting"></i>
         </a>
       </div>
       <!-- 有序列表 -->
-      <div class="wd-edit-link-box insertOrderedList" (mousedown)="insertOrderedList($event)">
-        <a data-tip="有序列表" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertOrderedList" (mousedown)="!inCode&&insertOrderedList($event)">
+        <a data-tip="有序列表" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-list-numbered"></i>
         </a>
       </div>
       <!-- 无序列表 -->
-      <div class="wd-edit-link-box insertUnorderedList" (mousedown)="insertUnorderedList($event)">
-        <a data-tip="无序列表" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertUnorderedList" (mousedown)="!inCode&&insertUnorderedList($event)">
+        <a data-tip="无序列表" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-list2"></i>
         </a>
       </div>
       <!-- 表格 mdn无api，用insertHTML实现 -->
-      <div class="wd-edit-link-box insertHTML" (mousedown)="insertTable($event)">
-        <a data-tip="表格" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertHTML" (mousedown)="!inCode&&insertTable($event)">
+        <a data-tip="表格" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-table"></i>
         </a>
       </div>
       <!-- 插入超链接，弹窗 -->
-      <div class="wd-edit-link-box insertHTML" (mousedown)="insertLink($event)">
-        <a data-tip="链接" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertHTML" (mousedown)="!inCode&&insertLink($event)">
+        <a data-tip="链接" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-link"></i>
         </a>
       </div>
       <!-- 插入水平线hr -->
-      <div class="wd-edit-link-box insertHorizontalRule" (mousedown)="insertHorizontalRule($event)">
-        <a data-tip="水平线" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertHorizontalRule" (mousedown)="!inCode&&insertHorizontalRule($event)">
+        <a data-tip="水平线" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-page-break"></i>
         </a>
       </div>
       <!-- 插入文件 -->
-      <div class="wd-edit-link-box insertHTML" (mousedown)="insertFile($event)">
-        <a data-tip="文件" class="wd-edit-link" href="javascript: void 0">
+      <div class="wd-edit-link-box insertHTML" (mousedown)="!inCode&&insertFile($event)">
+        <a data-tip="文件" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript: void 0">
           <i class="z-editor-icomoon icon-upload-cloud"></i>
         </a>
       </div>
       <!-- 插入代码 -->
-      <div #codeRef class="wd-edit-link-box insertHTML" (mousedown)="insertCode($event)">
-        <a data-tip="代码" class="wd-edit-link" href="javascript:void 0">
+      <div #codeRef class="wd-edit-link-box insertHTML" (mousedown)="!inCode&&insertCode($event)">
+        <a data-tip="代码" [ngClass]="{disabled: inCode}" class="wd-edit-link" href="javascript:void 0">
           <i class="z-editor-icomoon icon-embed"></i>
         </a>
         <ul [hidden]="!switchCodePannel" class="wd-code-list">
@@ -277,14 +276,14 @@
     <!-- input,selectionchange,click事件记录上次编辑的光标 -->
     <!-- mousedown事件在鼠标按下，判断是否要设置聚焦并设置上次光标和重设编辑样式 -->
 
-    <div #pannelRef (keyup)="setRange()" (click)="pannelOnClick()" (keydown)="keydown($event)"
+    <div #pannelRef (keyup)="keyup($event)" (click)="pannelOnClick()" (keydown)="keydown($event)"
       (blur)="isInEditStatus=false" (paste)="pannelOnPaste($event)" (beforepaste)="pannelOnPaste($event)"
       (input)="setRangeAndEmitValue($event)" class="wd-deitor-content" contenteditable="true" [innerHTML]="vhtml|safeHTML">
     </div>
     <!-- 编辑体结束 -->
-    <div class="wd-edit-footer fn-clearfix" #footerRef>
-      <div class="wd-edit-footer-btn" *ngIf="hasBtn">
-        <button (click)="emitContent">保存</button>
+    <div *ngIf="hasBtn" class="wd-edit-footer fn-clearfix" #footerRef>
+      <div class="wd-edit-footer-btn">
+        <button (click)="emitContent()">保存</button>
       </div>
     </div>
   </div>

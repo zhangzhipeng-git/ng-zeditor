@@ -1,6 +1,5 @@
 import { OnInit, ElementRef, Renderer2, EventEmitter } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
-import { WindowOptions } from './_alert/window/window';
 import { DomService } from './service/DomService';
 export declare class AppZeditorComponent implements ControlValueAccessor, OnInit {
     private render2;
@@ -22,6 +21,11 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     constructor(render2: Renderer2, domService: DomService);
     /** 默认格式 */
     static FORMAT: {
+        isBold: boolean;
+        isItalic: boolean;
+        isUnderline: boolean;
+        isStrikeThrough: boolean;
+        scriptActive: string;
         formatBlock: string;
         foreColor: string;
         backColor: string;
@@ -29,6 +33,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
         fontSize: {
             key: string;
             value: string;
+            value$: string;
         };
         fontFamily: {
             key: string;
@@ -74,15 +79,11 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     /** 颜色 */
     colors: string[][];
     /** 字体大小 */
-    fontSizes: ({
+    fontSizes: {
         key: string;
         value: string;
         value$: number;
-    } | {
-        key: string;
-        value: string;
-        value$: string; /** 13/16调整为空字符串 */
-    })[];
+    }[];
     /** code */
     codes: string[];
     /** 选中的字样 */
@@ -109,6 +110,16 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     switchBackColorPannel: boolean;
     /** 是否打开代码语言面板 */
     switchCodePannel: boolean;
+    /** 是否加粗 */
+    isBold: boolean;
+    /** 是否斜体 */
+    isItalic: boolean;
+    /** 是否下划线 */
+    isUnderline: boolean;
+    /** 是否删除线 */
+    isStrikeThrough: boolean;
+    /** 默认无上下标 */
+    scriptActive: string;
     /** 默认左对齐 */
     justifyActive: string;
     /** 是否处于编辑状态中 */
@@ -119,6 +130,8 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     full: boolean;
     /** 父元素 */
     parent: HTMLElement;
+    /** 是否在代码区, 默认false */
+    inCode: boolean;
     onChange: (html: string) => void;
     onTouched: () => void;
     writeValue(obj: any): void;
@@ -135,30 +148,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     pannelFocus(): void;
     /**
-     * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
-     */
-    recoverRange(): void;
-    /**
-     * 1.聚焦面板并获取上次光标位置,设置当前历史编辑样式
-     * 2.点击编辑条的命令或者编辑面板后，将视为编辑状态
-     * @param  recover? 是否需要恢复上次光标
-     */
-    startEdit(recover?: boolean): void;
-    /**
-     * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
-     * @param e 事件对象
-     */
-    ensureFocus(e: Event): void;
-    /**
-     * 是否用行内style
-     * @param f 是否启用style，默认使用
-     */
-    styleWithCSS(f?: boolean): void;
-    /**
-     * 编辑初始化和设置历史格式
-     */
-    initEdit(): void;
-    /**
      * 设置字样
      * @param e 事件
      */
@@ -167,14 +156,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      * 设置字号
      */
     setFontSize(e: any): void;
-    /**
-     * 调整字体大小
-     * @param fontSize 字体大小对象
-     */
-    adjustFontSizeWithStyle(fontSize: {
-        value: number;
-        value$: string;
-    }): void;
     /**
      * 设置文本格式
      * @param e 事件
@@ -217,13 +198,9 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     switchStrikeThrough(e: any): void;
     /**
-     * 设置/取消上标
+     * 设置/取消上/下标
      */
-    superscript(e: Event): void;
-    /**
-     * 设置/取消下标
-     */
-    subscript(e: Event): void;
+    setScript(e: Event, cmd: 'superscript' | 'subscript'): void;
     /**
      * 设置文字对齐方向
      * @param  e 事件
@@ -337,27 +314,15 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     SwitchScreen(): void;
     /**
-     * 查询是否支持命令
-     * @param cmd 命令
-     */
-    isSupport(cmd: string): boolean;
-    /**
-     * 执行封装的编辑命令
-     * @param k 命令名称
-     * @param ui 打开ui弹窗
-     * @param v 设置命令值
-     * @returns true-设置成功，false-设置失败
-     */
-    cmd(k: string, ui: boolean, v?: any): boolean;
-    /**
-     * input,click,selectionchange事件记录编辑面板光标位置
-     */
-    setRange(): void;
-    /**
      * 监听按键事件 (处理tab缩进)
      * @param e 按键事件
      */
     keydown(e: Event | any): void;
+    /**
+     * 监听按键弹起事件
+     * @param e 按键弹起事件
+     */
+    keyup(e: Event | any): void;
     /**
      * 点击面板
      */
@@ -375,37 +340,82 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     emitContent(): void;
     /**
+     * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
+     */
+    private recoverRange;
+    /**
+     * 1.聚焦面板并获取上次光标位置,设置当前历史编辑样式
+     * 2.点击编辑条的命令或者编辑面板后，将视为编辑状态
+     * @param  recover? 是否需要恢复上次光标
+     */
+    private startEdit;
+    /**
+     * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
+     * @param e 事件对象
+     */
+    private ensureFocus;
+    /**
+     * 编辑初始化和设置历史格式
+     */
+    private initEdit;
+    /**
+     * 查询是否支持命令
+     * @param cmd 命令
+     */
+    private isSupport;
+    /**
+     * 兼容insertHTML命令
+     * @param html html
+     */
+    private insertHTML;
+    /**
+     * 执行封装的编辑命令
+     * @param k 命令名称
+     * @param ui 打开ui弹窗
+     * @param v 设置命令值
+     * @returns true-设置成功，false-设置失败
+     */
+    private cmd;
+    /**
+     * input,click,selectionchange事件记录编辑面板光标位置
+     */
+    private setRange;
+    /**
+     * 自动检测文字格式激活样式（加粗，斜体，下划线，删除线，上标，下标......）
+     */
+    private autoActive;
+    /**
+     * 从最深层节点到最外层节点执行回调
+     * @param start 最深层节点
+     * @param end 最外层节点
+     * @param fn 回调 直到回调返回true时才会终止回调的执行
+     */
+    private grandChildTograndParent;
+    /**
      * 找目标元素的的某个标签的urls和base64的url
      * @param target 元素
      * @param tag 标签
      */
-    getUrlsByTag(target: HTMLElement, tag: string): {
-        type: 'url' | 'base64';
-        src: string;
-    }[];
+    private getUrlsByTag;
     /**
      * 判断范围Range是否和代码区有交集
      * @returns true - 有交集，false - 无交集
      */
-    isRangeInCode(): boolean;
+    private isRangeInCode;
     /**
      * toast提示
      * @param  text? toast提示 默认为‘设置无效~’
      * @param  duration? 停留时间
      */
-    toast(text?: string, obj?: {
-        duration: number;
-        enter: number;
-        leave: number;
-    }): import("../bigbigbird-ng-zeditor").ɵc;
+    private toast;
     /**
      * 弹窗
      */
-    alert(obj: WindowOptions): void;
+    private alert;
     /**
      * 防抖
      * @param  f 回调
      * @param  t? 防抖时延 默认300ms
      */
-    debounce(f: () => void, t?: number): void;
+    private debounce;
 }

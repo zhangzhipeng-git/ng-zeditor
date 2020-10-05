@@ -3,6 +3,10 @@ import { Radio } from '../_form/radio-group/radio-group';
 import { DomService } from '../service/DomService';
 export declare class UIAnnexComponent {
     private domService;
+    /** 图片类型 */
+    static IMAGEARR: string[];
+    static AUDIOARR: string[];
+    static VIDEOARR: string[];
     url: string;
     width: string;
     height: string;
@@ -11,10 +15,6 @@ export declare class UIAnnexComponent {
     /** 重渲染input file */
     rebuild: boolean;
     radioGroup: Radio[];
-    /** 图片类型 */
-    static IMAGEARR: string[];
-    static AUDIOARR: string[];
-    static VIDEOARR: string[];
     file: ElementRef;
     _type: 'image' | 'audio' | 'video';
     handler: any;
@@ -35,7 +35,6 @@ export declare class UIAnnexComponent {
     insertOutLink(): void;
     /**
      * 传入src并根据类型获取文件html
-     * @param  src
      */
     getFileHTML: (src: string) => string;
     /**
@@ -50,7 +49,6 @@ export declare class UIAnnexComponent {
     getAudioHTML(src: string): string;
     /**
      * 获取插入视频的HTML
-     * @param src
      */
     getVideoHTML(src: string): string;
 }

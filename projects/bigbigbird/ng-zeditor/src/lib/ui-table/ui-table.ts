@@ -19,9 +19,9 @@ import { DomService } from '../service/DomService';
 })
 export class UITableComponent {
     /** 行数 */
-    row: string = '2';
+    row = '2';
     /** 列数 */
-    col: string = '2';
+    col = '2';
     handler: any;
     parent: any;
     constructor(
@@ -33,13 +33,13 @@ export class UITableComponent {
         const reg = /[1-9]{1,2}/;
         if (!reg.test(this.row)) {
             this.domService.tost({
-                text: "行数不合要求~"
+                text: '行数不合要求~'
             });
             return;
         }
         if (!reg.test(this.col)) {
             this.domService.tost({
-                text: "列数不合要求~"
+                text: '列数不合要求~'
             });
             return;
         }
@@ -47,13 +47,13 @@ export class UITableComponent {
         const r = Number(this.row);
         const c = Number(this.col);
         for (let i = 0; i < r; i++) {
-            let tr = "<tr>";
+            let tr = '<tr>';
             for (let j = 0; j < c; j++) {
-                tr += "<td>" /* + input */ + "</td>";
+                tr += '<td>' /* + input */ + '</td>';
             }
-            html += tr + "</tr>";
+            html += tr + '</tr>';
         }
-        html += "</tbody></table></div><p><br/></p>";
+        html += '</tbody></table></div><p><br/></p>';
         if (this.handler.recieveTableHTML(html)) {
             this.parent.close();
         }

@@ -10,12 +10,19 @@
  * Copyright (c) 2020 ZXWORK
  */
 export default class CommonUtil {
+    /**
+     * 根据元素id找元素
+     * @param id 元素id
+     */
+    static id(id: string) {
+        return document.getElementById(id);
+    }
 
     /**
      * 判断是否ie
      */
     static isIE() {
-        return !!((window as any).ActiveXObject || "ActiveXObject" in window);
+        return !!((window as any).ActiveXObject || 'ActiveXObject' in window);
     }
 
     /**
@@ -75,5 +82,42 @@ export default class CommonUtil {
             el = (<any> el.parentNode);
         }
         return el;
+    }
+    /**
+     * rgb颜色串转以#开头的16进制颜色串
+     * @param str rgb颜色串
+     */
+    static rgbToHex(str: string) {
+        if (!str) { return ''; }
+        if (str.charAt(0) === '#') { return str; }
+        if (str.indexOf('rgb(') < 0) { return ''; }
+        str = str.slice(4, -1);
+        const arr = str.split(',');
+        let str$ = '#';
+        arr.forEach((num: string) => {
+            let dimStr = Number(num).toString(16);
+            dimStr = dimStr.length < 2 ? '0' + dimStr : dimStr;
+            str$ += dimStr;
+        });
+        return str$;
+    }
+
+    /**
+     * 将多维数组变为一维数组
+     * @param arr 多维数组
+     * @param box 容器
+     */
+    static flat(arr: Array<any>, box?: Array<any>) {
+        // tslint:disable-next-line: curly
+        if (!box) box = [];
+        for (let i = 0, len = arr.length; i < len; i++) {
+            const e = arr[i];
+            if (e instanceof Array) {
+                this.flat(e, box);
+                continue;
+            }
+            box.push(e);
+        }
+        return box;
     }
 }

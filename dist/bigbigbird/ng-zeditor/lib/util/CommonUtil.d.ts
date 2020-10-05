@@ -1,5 +1,10 @@
 export default class CommonUtil {
     /**
+     * 根据元素id找元素
+     * @param id 元素id
+     */
+    static id(id: string): HTMLElement;
+    /**
      * 判断是否ie
      */
     static isIE(): boolean;
@@ -25,4 +30,15 @@ export default class CommonUtil {
      * @param  index 第index个父元素
      */
     static parent(el: HTMLElement, index?: number): HTMLElement;
+    /**
+     * rgb颜色串转以#开头的16进制颜色串
+     * @param str rgb颜色串
+     */
+    static rgbToHex(str: string): string;
+    /**
+     * 将多维数组变为一维数组
+     * @param arr 多维数组
+     * @param box 容器
+     */
+    static flat(arr: Array<any>, box?: Array<any>): any[];
 }

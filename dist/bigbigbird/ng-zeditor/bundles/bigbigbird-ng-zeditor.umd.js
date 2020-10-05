@@ -730,13 +730,13 @@
         UILinkComponent.prototype.emitLinkHTML = function () {
             if (!/^(\/\/|https?:)\/\/.+/.test(this.url)) {
                 this.domService.tost({
-                    text: "链接地址不规范"
+                    text: '链接地址不规范'
                 });
                 return;
             }
             if (!this.content) {
                 this.domService.tost({
-                    text: "请填写内容"
+                    text: '请填写内容'
                 });
                 return;
             }
@@ -744,11 +744,11 @@
             var html = '<a href="' +
                 this.url +
                 '" ' +
-                (this.checked ? 'target="_blank"' : "") +
-                (this.title ? "title=" + this.title : "") +
-                ">" +
+                (this.checked ? 'target="_blank"' : '') +
+                (this.title ? 'title=' + this.title : '') +
+                '>' +
                 this.content +
-                "</a>";
+                '</a>';
             if (this.handler.recieveLinkHTML(html)) {
                 this.parent.close();
             }
@@ -824,13 +824,13 @@
             var reg = /[1-9]{1,2}/;
             if (!reg.test(this.row)) {
                 this.domService.tost({
-                    text: "行数不合要求~"
+                    text: '行数不合要求~'
                 });
                 return;
             }
             if (!reg.test(this.col)) {
                 this.domService.tost({
-                    text: "列数不合要求~"
+                    text: '列数不合要求~'
                 });
                 return;
             }
@@ -842,13 +842,13 @@
             var c = Number(this.col);
             for (var i = 0; i < r; i++) {
                 /** @type {?} */
-                var tr = "<tr>";
+                var tr = '<tr>';
                 for (var j = 0; j < c; j++) {
-                    tr += "<td>" /* + input */ + "</td>";
+                    tr += '<td>' /* + input */ + '</td>';
                 }
-                html += tr + "</tr>";
+                html += tr + '</tr>';
             }
-            html += "</tbody></table></div><p><br/></p>";
+            html += '</tbody></table></div><p><br/></p>';
             if (this.handler.recieveTableHTML(html)) {
                 this.parent.close();
             }
@@ -898,9 +898,9 @@
         function UIAnnexComponent(domService) {
             var _this = this;
             this.domService = domService;
-            this.url = "https://";
-            this.width = "100%";
-            this.height = "200px";
+            this.url = 'https://';
+            this.width = '100%';
+            this.height = '200px';
             /**
              * 获取类型对应的名称
              */
@@ -909,9 +909,9 @@
              * 重渲染input file
              */
             this.rebuild = true;
-            this.radioGroup = [{ value: "image", text: "图片" }, { value: "audio", text: "音频" }, { value: "video", text: "视频" }];
+            this.radioGroup = [{ value: 'image', text: '图片' }, { value: 'audio', text: '音频' }, { value: 'video', text: '视频' }];
             // tslint:disable-next-line: variable-name
-            this._type = "image";
+            this._type = 'image';
             /**
              * 选择文件
              */
@@ -966,7 +966,7 @@
                     // 交给外部进行处理
                     /** @type {?} */
                     var tip_1 = _this.domService.tost({
-                        text: "上传中~",
+                        text: '上传中~',
                         duration: -1
                     });
                     // tslint:disable-next-line: no-unused-expression
@@ -1001,7 +1001,6 @@
             });
             /**
              * 传入src并根据类型获取文件html
-             * @param src
              */
             this.getFileHTML = ( /**
              * @param {?} src
@@ -1010,13 +1009,13 @@
                 /** @type {?} */
                 var html = '';
                 switch (_this.type) {
-                    case "image":
+                    case 'image':
                         html = _this.getImageHTML(src);
                         break;
-                    case "audio":
+                    case 'audio':
                         html = _this.getAudioHTML(src);
                         break;
-                    case "video":
+                    case 'video':
                         html = _this.getVideoHTML(src);
                         break;
                 }
@@ -1049,7 +1048,7 @@
             // 需要先设置宽度和高度
             /** @type {?} */
             var num = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?$/i;
-            if (!num.test(this.width + "") || !num.test(this.height + "")) {
+            if (!num.test(this.width + '') || !num.test(this.height + '')) {
                 this.domService.tost({
                     text: "\u4E0A\u4F20" + this.typeName + "\u524D\u8BF7\u586B\u5199\u5408\u9002\u7684\u9AD8\u5EA6\u548C\u5BBD\u5EA6~"
                 });
@@ -1063,9 +1062,14 @@
                 audio: UIAnnexComponent.AUDIOARR,
                 video: UIAnnexComponent.VIDEOARR,
             }[this.type];
-            file.accept = arr.join(",");
+            file.accept = arr.join(',');
+            if ('onchange' in file) {
+                file.onchange = this.fileChange;
+            }
+            else {
+                file.onpropertychange = this.fileChange;
+            }
             file.click();
-            file.onchange = this.fileChange;
         };
         /**
          * 插入外链
@@ -1076,7 +1080,7 @@
             var hasperc = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?$/i;
             if (!hasperc.test(this.width)) {
                 this.domService.tost({
-                    text: "请填写合适的宽度~"
+                    text: '请填写合适的宽度~'
                 });
                 return;
             }
@@ -1088,7 +1092,7 @@
             }
             if (!/^(\/\/|https?:)\/\/.+/.test(this.url)) {
                 this.domService.tost({
-                    text: "链接地址不规范"
+                    text: '链接地址不规范'
                 });
                 return;
             }
@@ -1115,7 +1119,7 @@
                 ';width:' +
                 this.width +
                 ';object-fit:cover;" />' +
-                "</p><br/>");
+                '</p><br/>');
         };
         /**
          * 获取插入音频的HTML
@@ -1158,9 +1162,9 @@
     /**
      * 图片类型
      */
-    UIAnnexComponent.IMAGEARR = ["image/gif", "image/jpeg", "image/jpg", "image/png", "image/svg"];
-    UIAnnexComponent.AUDIOARR = ["audio/mp3", "audio/ogg", "audio/wav"];
-    UIAnnexComponent.VIDEOARR = ["video/mp4", "video/ogg", "video/webm"];
+    UIAnnexComponent.IMAGEARR = ['image/gif', 'image/jpeg', 'image/jpg', 'image/png', 'image/svg'];
+    UIAnnexComponent.AUDIOARR = ['audio/mp3', 'audio/ogg', 'audio/wav'];
+    UIAnnexComponent.VIDEOARR = ['video/mp4', 'video/ogg', 'video/webm'];
     UIAnnexComponent.decorators = [
         { type: core.Component, args: [{
                     selector: 'app-annex',
@@ -1217,7 +1221,6 @@
         UIAnnexComponent.prototype.fileChange;
         /**
          * 传入src并根据类型获取文件html
-         * \@param src
          * @type {?}
          */
         UIAnnexComponent.prototype.getFileHTML;
@@ -1469,11 +1472,19 @@
         function CommonUtil() {
         }
         /**
+         * 根据元素id找元素
+         * @param {?} id 元素id
+         * @return {?}
+         */
+        CommonUtil.id = function (id) {
+            return document.getElementById(id);
+        };
+        /**
          * 判断是否ie
          * @return {?}
          */
         CommonUtil.isIE = function () {
-            return !!((( /** @type {?} */(window))).ActiveXObject || "ActiveXObject" in window);
+            return !!((( /** @type {?} */(window))).ActiveXObject || 'ActiveXObject' in window);
         };
         /**
          * 找上一个节点
@@ -1547,6 +1558,58 @@
                 el = (( /** @type {?} */(el.parentNode)));
             }
             return el;
+        };
+        /**
+         * rgb颜色串转以#开头的16进制颜色串
+         * @param {?} str rgb颜色串
+         * @return {?}
+         */
+        CommonUtil.rgbToHex = function (str) {
+            if (!str) {
+                return '';
+            }
+            if (str.charAt(0) === '#') {
+                return str;
+            }
+            if (str.indexOf('rgb(') < 0) {
+                return '';
+            }
+            str = str.slice(4, -1);
+            /** @type {?} */
+            var arr = str.split(',');
+            /** @type {?} */
+            var str$ = '#';
+            arr.forEach(( /**
+             * @param {?} num
+             * @return {?}
+             */function (num) {
+                /** @type {?} */
+                var dimStr = Number(num).toString(16);
+                dimStr = dimStr.length < 2 ? '0' + dimStr : dimStr;
+                str$ += dimStr;
+            }));
+            return str$;
+        };
+        /**
+         * 将多维数组变为一维数组
+         * @param {?} arr 多维数组
+         * @param {?=} box 容器
+         * @return {?}
+         */
+        CommonUtil.flat = function (arr, box) {
+            // tslint:disable-next-line: curly
+            if (!box)
+                box = [];
+            for (var i = 0, len = arr.length; i < len; i++) {
+                /** @type {?} */
+                var e = arr[i];
+                if (e instanceof Array) {
+                    this.flat(e, box);
+                    continue;
+                }
+                box.push(e);
+            }
+            return box;
         };
         return CommonUtil;
     }());
@@ -1632,6 +1695,7 @@
         CursorUtil.getSelection = function (elem) {
             /** @type {?} */
             var selection;
+            // tslint:disable-next-line: curly
             if (elem && document.activeElement !== elem)
                 elem.focus();
             if (window.getSelection) {
@@ -1641,7 +1705,8 @@
                 selection = document.getSelection();
             }
             else {
-                selection = (( /** @type {?} */(document))).selection.createRange();
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
+                selection = (( /** @type {?} */(document))).body.createRange();
             }
             return selection;
         };
@@ -1654,12 +1719,16 @@
             /** @type {?} */
             var selection = this.getSelection();
             // 新标准
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(selection))).addRange) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(selection))).removeAllRanges();
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(selection))).addRange(( /** @type {?} */(range)));
                 return;
             }
             // 旧标准
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(selection))) = ( /** @type {?} */(range));
         };
         /**
@@ -1671,10 +1740,13 @@
         CursorUtil.getRange = function (index, elem) {
             /** @type {?} */
             var selection = this.getSelection(elem);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(selection))).getRangeAt && (( /** @type {?} */(selection))).rangeCount) { // 新标准
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 return (( /** @type {?} */(selection))).getRangeAt(index);
             }
             else { // 旧标准
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 return (( /** @type {?} */(selection)));
             }
         };
@@ -1684,56 +1756,21 @@
          * @return {?}
          */
         CursorUtil.selectSelectionElementChilds = function (elem) {
+            // tslint:disable-next-line: curly
             if (!elem)
                 return;
             /** @type {?} */
             var selection = this.getSelection();
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(selection))).selectAllChildren) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(selection))).selectAllChildren(elem);
                 return;
             }
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(selection))).moveToElementText(elem);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(selection))).select();
-        };
-        /**
-         * 选中元素elem的内容
-         * @param {?} elem
-         * @param {?=} index ? 默认0 range下标
-         * @return {?}
-         */
-        CursorUtil.selectRangeElementChilds = function (elem, index) {
-            if (index === void 0) { index = 0; }
-            if (!elem)
-                return;
-            /** @type {?} */
-            var range = this.getRange(index);
-            if ((( /** @type {?} */(range))).selectNodeContents) {
-                (( /** @type {?} */(range))).selectNodeContents(elem);
-                return;
-            }
-            (( /** @type {?} */(range))).moveToElementText(elem);
-            (( /** @type {?} */(range))).select();
-        };
-        /**
-         * 将范围设置到元素并折叠
-         * @param {?} elem 元素，该元素可以是不可聚焦的元素
-         * @param {?} isStart 是否折叠到开头
-         * @param {?=} index ? 默认0 range下标
-         * @return {?}
-         */
-        CursorUtil.setRangeToElement = function (elem, isStart, index) {
-            if (index === void 0) { index = 0; }
-            this.selectRangeElementChilds(elem, index);
-            /** @type {?} */
-            var range = this.getRange(index);
-            // 新标准
-            if ((( /** @type {?} */(range))).selectNodeContents) {
-                (( /** @type {?} */(range))).collapse(isStart);
-                return;
-            }
-            // 旧标准
-            (( /** @type {?} */(range))).collapse(!isStart);
-            (( /** @type {?} */(range))).select();
         };
         /**
          * 设置选区到某个元素，并折叠
@@ -1746,16 +1783,22 @@
             /** @type {?} */
             var selection = this.getSelection();
             // 新标准
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if (isStart && (( /** @type {?} */(selection))).collapseToStart) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(selection))).collapseToStart();
                 return;
             }
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if (!isStart && (( /** @type {?} */(selection))).collapseToEnd) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(selection))).collapseToEnd();
                 return;
             }
             // 旧标准
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(selection))).collapse(!isStart);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(selection))).select();
         };
         /**
@@ -1765,6 +1808,7 @@
         CursorUtil.getSelectionText = function () {
             /** @type {?} */
             var selection = this.getSelection();
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             return (( /** @type {?} */(selection))).toString() || (( /** @type {?} */(selection))).text;
         };
         /**
@@ -1776,58 +1820,8 @@
             if (index === void 0) { index = 0; }
             /** @type {?} */
             var range = this.getRange(index);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             return (( /** @type {?} */(range))).toString() || (( /** @type {?} */(range))).text;
-        };
-        /**
-         * 设置range的起始和结束位置相对于各自的容器的偏移量
-         * @param {?} s 起始偏移
-         * @param {?} e 尾部偏移
-         * @param {?=} index
-         * @return {?}
-         */
-        CursorUtil.setRangeOffset = function (s, e, index) {
-            if (index === void 0) { index = 0; }
-            /** @type {?} */
-            var range = this.getRange(index);
-            if ((( /** @type {?} */(range))).setEnd) {
-                range = ( /** @type {?} */(range));
-                range.setStart(range.startContainer, s);
-                range.setEnd(range.endContainer, e);
-                return;
-            }
-            // 重置TextRange到头部
-            (( /** @type {?} */(range))).collapse(false);
-            (( /** @type {?} */(range))).select();
-            (( /** @type {?} */(range))).moveEnd('charactor', e);
-            (( /** @type {?} */(range))).moveStart('charactor', e);
-            (( /** @type {?} */(range))).select();
-        };
-        /**
-         * 设置选区的起始和结束位置相对于各自的容器的偏移量
-         * @param {?} s 起始位置偏移量
-         * @param {?=} e
-         * @return {?}
-         */
-        CursorUtil.setSelectionOffset = function (s, e) {
-            if (e === void 0) {
-                e = s;
-            }
-            /** @type {?} */
-            var selection = this.getSelection();
-            if ((( /** @type {?} */(selection))).setBaseAndExtent) {
-                selection = ( /** @type {?} */(selection));
-                if (!selection.anchorNode || !selection.focusNode) {
-                    return;
-                }
-                selection.setBaseAndExtent(selection.anchorNode, s, selection.focusNode, e);
-                return;
-            }
-            // 重置TextRange到头部
-            (( /** @type {?} */(selection))).collapse(false);
-            (( /** @type {?} */(selection))).select();
-            (( /** @type {?} */(selection))).moveEnd('charactor', e);
-            (( /** @type {?} */(selection))).moveStart('charactor', e);
-            (( /** @type {?} */(selection))).select();
         };
         /**
          * 获取range起始位置和结束位置的最浅的父元素
@@ -1840,9 +1834,12 @@
             if (index === void 0) { index = 0; }
             /** @type {?} */
             var range = this.getRange(index);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(range))).commonAncestorContainer) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 return (( /** @type {?} */(range))).commonAncestorContainer;
             }
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             return (( /** @type {?} */(range))).parentElement();
         };
         /**
@@ -1854,11 +1851,15 @@
             if (index === void 0) { index = 0; }
             /** @type {?} */
             var range = this.getRange(index);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(range))).deleteContents) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(range))).deleteContents();
                 return;
             }
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(range))).pasteHTML('');
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(range))).select();
         };
         /**
@@ -1872,11 +1873,15 @@
             this.deleteRangeContent(index);
             /** @type {?} */
             var range = this.getRange(index);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             if ((( /** @type {?} */(range))).insertNode) {
+                // tslint:disable-next-line: no-angle-bracket-type-assertion
                 (( /** @type {?} */(range))).insertNode(node);
                 return;
             }
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(range))).pasteHTML((( /** @type {?} */(node))).outerHTML);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
             (( /** @type {?} */(range))).select();
         };
         return CursorUtil;
@@ -1968,7 +1973,7 @@
              * 字体大小
              */
             // tslint:disable-next-line: max-line-length
-            this.fontSizes = [{ key: 'xx-small', value: '1', value$: 9 / 16 }, { key: 'x-small', value: '2', value$: 10 / 16 }, { key: 'small', value: '3', value$: '' /** 13/16调整为空字符串 */ }, { key: 'medium', value: '4', value$: 16 / 16 }, { key: 'large', value: '5', value$: 18 / 16 }, { key: 'x-large', value: '6', value$: 24 / 16 }, { key: 'xx-large', value: '7', value$: 32 / 16 }];
+            this.fontSizes = [{ key: 'x-small', value: '1', value$: 10 / 16 }, { key: 'small', value: '2', value$: 12 / 16 }, { key: 'medium', value: '3', value$: 16 / 16 }, { key: 'large', value: '4', value$: 18 / 16 }, { key: 'x-large', value: '5', value$: 24 / 16 }, { key: 'xx-large', value: '6', value$: 32 / 16 }, { key: 'xxx-large', value: '7', value$: 48 / 16 }];
             /**
              * code
              */
@@ -1980,8 +1985,8 @@
             /**
              * 选中的字号
              */
-            this.fontSize = { key: 'small', value: 3, value$: '' }; // 默认1rem;
-            // 默认1rem;
+            this.fontSize = { key: 'small', value: 2, value$: 12 / 16 }; // 默认.75rem;
+            // 默认.75rem;
             /**
              * 文本格式
              */
@@ -2023,6 +2028,26 @@
              */
             this.switchCodePannel = false;
             /**
+             * 是否加粗
+             */
+            this.isBold = false;
+            /**
+             * 是否斜体
+             */
+            this.isItalic = false;
+            /**
+             * 是否下划线
+             */
+            this.isUnderline = false;
+            /**
+             * 是否删除线
+             */
+            this.isStrikeThrough = false;
+            /**
+             * 默认无上下标
+             */
+            this.scriptActive = '';
+            /**
              * 默认左对齐
              */
             this.justifyActive = 'justifyLeft';
@@ -2034,6 +2059,10 @@
              * 是否全屏, 默认false
              */
             this.full = false;
+            /**
+             * 是否在代码区, 默认false
+             */
+            this.inCode = false;
             this.onChange = ( /**
              * @return {?}
              */function () { return undefined; });
@@ -2209,97 +2238,6 @@
             }
         };
         /**
-         * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.recoverRange = function () {
-            if (!this.pannel) {
-                return;
-            }
-            // 确保编辑面板先是聚焦的
-            if (document.activeElement !== this.pannel) {
-                this.pannel.focus();
-            }
-            if (this.range) { // 存在上次光标，则设置上次光标
-                CursorUtil.setFirstRange(this.range);
-                return;
-            }
-            CursorUtil.setSelectionToElement(this.pannel, false);
-        };
-        /**
-         * 1.聚焦面板并获取上次光标位置,设置当前历史编辑样式
-         * 2.点击编辑条的命令或者编辑面板后，将视为编辑状态
-         * @param {?=} recover
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.startEdit = function (recover) {
-            if (recover === void 0) { recover = true; }
-            // 恢复上次光标（点击编辑面板不需要恢复上次光标，点击编辑条需要恢复上次光标）
-            if (recover) {
-                this.recoverRange();
-            }
-            this.initEdit();
-        };
-        /**
-         * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
-         * @param {?} e 事件对象
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.ensureFocus = function (e) {
-            // 阻止失焦
-            e.preventDefault();
-            // 编辑初始化
-            this.startEdit();
-        };
-        /**
-         * 是否用行内style
-         * @param {?=} f 是否启用style，默认使用
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.styleWithCSS = function (f) {
-            if (f === void 0) { f = true; }
-            this.cmd('styleWithCSS', false, f);
-        };
-        /**
-         * 编辑初始化和设置历史格式
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.initEdit = function () {
-            // 在编辑状态不再次进行初始化
-            if (this.isInEditStatus) {
-                return;
-            }
-            // 标记面板处于编辑状态
-            if (!this.isInEditStatus) {
-                this.isInEditStatus = true;
-            }
-            // 设置历史格式
-            // 在代码区不设置历史格式
-            if (this.isRangeInCode()) {
-                return;
-            }
-            // 如果光标周围有内容则不设置历史格式
-            /** @type {?} */
-            var el = CursorUtil.getRangeCommonParent();
-            if (el.nodeType === 3) {
-                return;
-            }
-            this.cmd('formatBlock', false, this.formatBlock);
-            // 如果编辑器内没有文本标签，文字对齐命令不能第一个执行
-            // 否则会将光标设到下一个文本标签内
-            this.cmd(this.justifyActive, false);
-            // css中font-family默认是微软雅黑
-            if (this.fontFamily.key !== '微软雅黑') {
-                this.cmd('fontName', false, this.fontFamily.value);
-            }
-            this.cmd('foreColor', false, this.foreColor);
-            this.cmd('backColor', false, this.backColor);
-            // css中font-size默认是.75rem
-            if (this.fontSize.value$ !== '') {
-                this.cmd('fontSize', false, this.fontSize.value);
-            }
-        };
-        /**
          * 设置字样
          * @param {?} e 事件
          * @return {?}
@@ -2336,35 +2274,6 @@
             var fontSize = this.fontSizes[index * 1];
             this.fontSize = fontSize;
             this.cmd('fontSize', false, fontSize.value);
-            this.adjustFontSizeWithStyle(( /** @type {?} */(fontSize)));
-        };
-        /**
-         * 调整字体大小
-         * @param {?} fontSize 字体大小对象
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.adjustFontSizeWithStyle = function (fontSize) {
-            var _this = this;
-            // 默认字体不做处理
-            if (fontSize.value$ === '') {
-                return;
-            }
-            /** @type {?} */
-            var el = ( /** @type {?} */(CursorUtil.getRangeCommonParent()));
-            /** @type {?} */
-            var fonts = CommonUtil.parent(el, 2).querySelectorAll("font[size=\"" + fontSize.value + "\"]");
-            /** @type {?} */
-            var value = fontSize.value$;
-            Array.prototype.forEach.call(fonts, ( /**
-             * @param {?} font
-             * @return {?}
-             */function (/**
-             * @param {?} font
-             * @return {?}
-             */ font) {
-                _this.render2.removeAttribute(font, 'size');
-                font.style.fontSize = value === 'inherit' ? 'inherit' : fontSize.value$ + 'rem';
-            }));
         };
         /**
          * 设置文本格式
@@ -2433,10 +2342,6 @@
          */
         AppZeditorComponent.prototype.insertCode = function (e) {
             this.ensureFocus(e);
-            if (this.isRangeInCode()) {
-                this.toast('代码区无法插入代码区~');
-                return;
-            }
             this.switchCodePannel = !this.switchCodePannel;
             /** @type {?} */
             var index = e.target.getAttribute('data-index');
@@ -2447,16 +2352,14 @@
             /** @type {?} */
             var code = this.code.toLowerCase();
             /** @type {?} */
-            var html = "<pre style=\"white-space: pre\" title=\"\u4EE3\u7801\u533A\"><code class=\"" + code + "\"><p><br/></p></code></pre><p><br/></p>";
-            this.removeFormat();
+            var id = (Math.random() + '').slice(2, 8);
+            /** @type {?} */
+            var html = "<pre style=\"white-space:pre;\" title=\"\u4EE3\u7801\u533A\"><code class=\"" + code + "\"><p id=\"" + id + "\"><br/></p></code></pre><p><br/></p>";
             this.cmd('insertHTML', false, html);
-            /** @type {?} */
-            var pel = CursorUtil.getRangeCommonParent();
-            /** @type {?} */
-            var box = ( /** @type {?} */(CommonUtil.preSibling(pel)));
             // 插入html后，将光标移至代码区的p标签中
-            CursorUtil.setRangeToElement(box.children[0].children[0], true);
-            this.setRange(); // 手动设置一下
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            CursorUtil.setSelectionToElement(( /** @type {?} */((CommonUtil.id(id)))), true);
+            this.setRange(); // 手动记录一下光标位置
         };
         /**
          * 行内换行（shift+enter）
@@ -2479,6 +2382,7 @@
         AppZeditorComponent.prototype.switchBold = function (e) {
             this.ensureFocus(e);
             this.cmd('bold', false, '');
+            this.isBold = !this.isBold;
         };
         /**
          * 设置斜体
@@ -2488,6 +2392,7 @@
         AppZeditorComponent.prototype.switchItalic = function (e) {
             this.ensureFocus(e);
             this.cmd('italic', false, '');
+            this.isItalic = !this.isItalic;
         };
         /**
          * 设置下划线
@@ -2497,6 +2402,7 @@
         AppZeditorComponent.prototype.switchUnderline = function (e) {
             this.ensureFocus(e);
             this.cmd('underline', false, '');
+            this.isUnderline = !this.isUnderline;
         };
         /**
          * 设置删除线
@@ -2506,24 +2412,23 @@
         AppZeditorComponent.prototype.switchStrikeThrough = function (e) {
             this.ensureFocus(e);
             this.cmd('strikeThrough', false, '');
+            this.isStrikeThrough = !this.isStrikeThrough;
         };
         /**
-         * 设置/取消上标
+         * 设置/取消上/下标
          * @param {?} e
+         * @param {?} cmd
          * @return {?}
          */
-        AppZeditorComponent.prototype.superscript = function (e) {
+        AppZeditorComponent.prototype.setScript = function (e, cmd) {
             this.ensureFocus(e);
-            this.cmd('superscript', false, '');
-        };
-        /**
-         * 设置/取消下标
-         * @param {?} e
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.subscript = function (e) {
-            this.ensureFocus(e);
-            this.cmd('subscript', false, '');
+            if (this.scriptActive === cmd) {
+                this.cmd(cmd, false, '');
+                this.scriptActive = '';
+                return;
+            }
+            this.scriptActive = cmd;
+            this.cmd(cmd, false, '');
         };
         /**
          * 设置文字对齐方向
@@ -2578,10 +2483,6 @@
          * @return {?}
          */
         AppZeditorComponent.prototype.insertTable = function (e) {
-            if (this.isRangeInCode()) {
-                this.toast('代码区无法插入表格~');
-                return;
-            }
             this.alert({ title: '插入表格', animation: 'scale', content: UITableComponent, handler: this, theme: this.theme });
         };
         /**
@@ -2600,10 +2501,6 @@
          * @return {?}
          */
         AppZeditorComponent.prototype.insertLink = function (e) {
-            if (this.isRangeInCode()) {
-                this.toast('代码区无法插入链接~');
-                return;
-            }
             this.alert({ title: '插入链接', animation: 'scale', content: UILinkComponent, handler: this, theme: this.theme });
         };
         /**
@@ -2614,12 +2511,6 @@
         AppZeditorComponent.prototype.recieveLinkHTML = function (html) {
             this.startEdit();
             this.cmd('insertHTML', false, html);
-            /** @type {?} */
-            var el = CursorUtil.getRangeCommonParent();
-            el = this.render2.parentNode(el);
-            if (el.style) {
-                this.render2.removeAttribute(el, 'style');
-            }
             return true;
         };
         /**
@@ -2628,10 +2519,6 @@
          * @return {?}
          */
         AppZeditorComponent.prototype.insertFile = function (e) {
-            if (this.isRangeInCode()) {
-                this.toast('代码区无法插入文件~');
-                return;
-            }
             this.alert({ title: '插入文件', animation: 'scale', content: UIAnnexComponent, handler: this, theme: this.theme });
         };
         /**
@@ -2755,6 +2642,7 @@
          */
         AppZeditorComponent.prototype.history = function () {
             this.vhtml = window.localStorage.getItem('editor_input') || '';
+            this.autoActive();
         };
         /**
          * 清除格式，不阻止失焦，重新聚焦时会设置历史格式
@@ -2823,43 +2711,6 @@
             }
         };
         /**
-         * 查询是否支持命令
-         * @param {?} cmd 命令
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.isSupport = function (cmd) {
-            return document.queryCommandSupported(cmd);
-        };
-        /**
-         * 执行封装的编辑命令
-         * @param {?} k 命令名称
-         * @param {?} ui 打开ui弹窗
-         * @param {?=} v 设置命令值
-         * @return {?} true-设置成功，false-设置失败
-         */
-        AppZeditorComponent.prototype.cmd = function (k, ui, v) {
-            if (!this.isSupport(k)) {
-                this.toast('系统不支持该命令~');
-                return false;
-            }
-            /** @type {?} */
-            var whiteList = 'insertHTML,paste,cut,copy,removeFormat,delete,selectAll,redo,undo,insertBrOnReturn';
-            if (whiteList.indexOf(k) < 0 && this.isRangeInCode()) {
-                this.toast('代码区内无法执行该命令~');
-                return false;
-            }
-            /** @type {?} */
-            var r = document.execCommand(k, ui, v || '');
-            return r;
-        };
-        /**
-         * input,click,selectionchange事件记录编辑面板光标位置
-         * @return {?}
-         */
-        AppZeditorComponent.prototype.setRange = function () {
-            this.range = CursorUtil.getRange(0, this.pannel);
-        };
-        /**
          * 监听按键事件 (处理tab缩进)
          * @param {?} e 按键事件
          * @return {?}
@@ -2878,12 +2729,33 @@
             return;
         };
         /**
+         * 监听按键弹起事件
+         * @param {?} e 按键弹起事件
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.keyup = function (e) {
+            this.setRange();
+            if (this.isRangeInCode()) {
+                return;
+            }
+            // tslint:disable-next-line: deprecation
+            e = e || window.event;
+            /** @type {?} */
+            var key = e.keyCode || e.which || e.charCode;
+            // 监听home,end和上下左右按键，或后退键或删除键或enter键，设置激活文字格式
+            if ((key >= 35 && key <= 40) || key === 8 || key === 46 || key === 13) {
+                this.autoActive();
+                return;
+            }
+        };
+        /**
          * 点击面板
          * @return {?}
          */
         AppZeditorComponent.prototype.pannelOnClick = function () {
             this.initEdit();
             this.setRange();
+            this.autoActive();
         };
         /**
          * 在编辑面板中粘贴（若在代码区内粘贴则清除格式！！！）
@@ -2891,6 +2763,10 @@
          * @return {?}
          */
         AppZeditorComponent.prototype.pannelOnPaste = function (e) {
+            var _this = this;
+            setTimeout(( /**
+             * @return {?}
+             */function () { _this.autoActive(); }));
             if (!this.isRangeInCode()) {
                 return;
             }
@@ -2982,7 +2858,409 @@
             this.recieveContent.emit(obj);
         };
         /**
+         * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
+         * @private
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.recoverRange = function () {
+            if (!this.pannel) {
+                return;
+            }
+            // 确保编辑面板先是聚焦的
+            if (document.activeElement !== this.pannel) {
+                this.pannel.focus();
+            }
+            if (this.range) { // 存在上次光标，则设置上次光标
+                CursorUtil.setFirstRange(this.range);
+                return;
+            }
+            CursorUtil.setSelectionToElement(this.pannel, false);
+        };
+        /**
+         * 1.聚焦面板并获取上次光标位置,设置当前历史编辑样式
+         * 2.点击编辑条的命令或者编辑面板后，将视为编辑状态
+         * @private
+         * @param {?=} recover
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.startEdit = function (recover) {
+            if (recover === void 0) { recover = true; }
+            // 恢复上次光标（点击编辑面板不需要恢复上次光标，点击编辑条需要恢复上次光标）
+            if (recover) {
+                this.recoverRange();
+            }
+            this.initEdit();
+        };
+        /**
+         * 阻止默认事件防止失焦，确保编辑面板聚焦，设置历史光标和格式
+         * @private
+         * @param {?} e 事件对象
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.ensureFocus = function (e) {
+            // 阻止失焦
+            e.preventDefault();
+            // 编辑初始化
+            this.startEdit();
+        };
+        /**
+         * 编辑初始化和设置历史格式
+         * @private
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.initEdit = function () {
+            // 在编辑状态不再次进行初始化
+            if (this.isInEditStatus) {
+                return;
+            }
+            // 标记面板处于编辑状态
+            if (!this.isInEditStatus) {
+                this.isInEditStatus = true;
+            }
+            // 在代码区不设置默认格式
+            if (this.isRangeInCode()) {
+                return;
+            }
+            // 如果光标周围有内容则不设置默认格式
+            /** @type {?} */
+            var el = CursorUtil.getRangeCommonParent();
+            if (el.nodeType === 3) {
+                return;
+            }
+            // 如果没有内容，则格式化默认格式
+            if (!this.pannel.children || !this.pannel.children.length) {
+                this.cmd('formatBlock', false, this.formatBlock);
+                this.cmd('fontName', false, this.fontFamily.value);
+                this.cmd('fontSize', false, this.fontSize.value);
+            }
+        };
+        /**
+         * 查询是否支持命令
+         * @private
+         * @param {?} cmd 命令
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.isSupport = function (cmd) {
+            return document.queryCommandSupported(cmd);
+        };
+        /**
+         * 兼容insertHTML命令
+         * @private
+         * @param {?} html html
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.insertHTML = function (html) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            /** @type {?} */
+            var range = ( /** @type {?} */(CursorUtil.getRange(0)));
+            range.deleteContents();
+            /** @type {?} */
+            var df = document.createDocumentFragment();
+            /** @type {?} */
+            var name = 'div';
+            if (html.indexOf('<a>') > -1) {
+                name = 'span';
+            }
+            /** @type {?} */
+            var el = document.createElement(name);
+            el.innerHTML = html;
+            df.appendChild(el);
+            range.insertNode(df);
+            return true;
+        };
+        /**
+         * 执行封装的编辑命令
+         * @private
+         * @param {?} k 命令名称
+         * @param {?} ui 打开ui弹窗
+         * @param {?=} v 设置命令值
+         * @return {?} true-设置成功，false-设置失败
+         */
+        AppZeditorComponent.prototype.cmd = function (k, ui, v) {
+            if (!this.isSupport(k)) {
+                if ('insertHTML' === k) {
+                    return this.insertHTML(v);
+                }
+                this.toast('系统不支持该命令~');
+                return false;
+            }
+            /** @type {?} */
+            var r = document.execCommand(k, ui, v || '');
+            // 执行完以下命令后，非代码区内需要自动检测文字格式（样式）
+            /** @type {?} */
+            var blackList = 'redo,undo,delete,insertHTML,insertHorizontalRule,insertUnorderedList,insertOrderedList';
+            if (r && blackList.indexOf(k) > -1 && !this.isRangeInCode()) {
+                this.autoActive();
+            }
+            return r;
+        };
+        /**
+         * input,click,selectionchange事件记录编辑面板光标位置
+         * @private
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.setRange = function () {
+            if (this.isRangeInCode()) {
+                this.inCode = true;
+            }
+            else {
+                this.inCode = false;
+            }
+            this.range = CursorUtil.getRange(0, this.pannel);
+        };
+        /**
+         * 自动检测文字格式激活样式（加粗，斜体，下划线，删除线，上标，下标......）
+         * @private
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.autoActive = function () {
+            var _this = this;
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            /** @type {?} */
+            var p = ( /** @type {?} */((CursorUtil.getRangeCommonParent())));
+            if (!p) {
+                return;
+            }
+            // 如果选取对象的节点是文本节点，则将p变为其父节点
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            if (p.nodeName === '#text') {
+                p = ( /** @type {?} */(p.parentNode));
+            }
+            // 段落格式
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.cmd('formatBlock', false, 'p');
+                    _this.formatBlock = AppZeditorComponent.FORMAT.formatBlock;
+                    return true;
+                }
+                /** @type {?} */
+                var formatBlock = e.nodeName;
+                /** @type {?} */
+                var formatBlock$ = _this.formatBlocks.find(( /**
+                 * @param {?} fb
+                 * @return {?}
+                 */function (fb) {
+                    return fb.key.toUpperCase() === formatBlock;
+                }));
+                if (formatBlock$) {
+                    _this.formatBlock = formatBlock$.key;
+                    return true;
+                }
+            }));
+            // 字样
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.fontFamily = AppZeditorComponent.FORMAT.fontFamily;
+                    return true;
+                }
+                /** @type {?} */
+                var fontFamily = e.getAttribute('face');
+                if (!fontFamily) {
+                    return;
+                }
+                /** @type {?} */
+                var fontFamily$ = _this.fontFamilys.find(( /**
+                 * @param {?} ff
+                 * @return {?}
+                 */function (ff) {
+                    return ff.value.toLowerCase() === fontFamily.toLowerCase();
+                }));
+                if (fontFamily$) {
+                    _this.fontFamily = fontFamily$;
+                    return true;
+                }
+            }));
+            // 字号
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.fontSize = AppZeditorComponent.FORMAT.fontSize;
+                    return true;
+                }
+                /** @type {?} */
+                var fontSize = e.getAttribute('size');
+                if (!fontSize) {
+                    return;
+                }
+                /** @type {?} */
+                var fontSize$ = _this.fontSizes.find(( /**
+                 * @param {?} fs
+                 * @return {?}
+                 */function (fs) {
+                    return fs.value === fontSize;
+                }));
+                if (fontSize$) {
+                    _this.fontSize = fontSize$;
+                    return true;
+                }
+            }));
+            // 前景色
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.foreColor = AppZeditorComponent.FORMAT.foreColor;
+                    return true;
+                }
+                /** @type {?} */
+                var foreColor = CommonUtil.rgbToHex(e.getAttribute('color'));
+                /** @type {?} */
+                var foreColor$ = CommonUtil.flat(_this.colors).find(( /**
+                 * @param {?} cr
+                 * @return {?}
+                 */function (cr) {
+                    return cr.toLowerCase() === foreColor.toLowerCase();
+                }));
+                if (foreColor$) {
+                    _this.foreColor = foreColor$;
+                    return true;
+                }
+            }));
+            // 背景色
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.backColor = AppZeditorComponent.FORMAT.backColor;
+                    return true;
+                }
+                /** @type {?} */
+                var backColor = CommonUtil.rgbToHex(e.style.backgroundColor);
+                /** @type {?} */
+                var backColor$ = CommonUtil.flat(_this.colors).find(( /**
+                 * @param {?} cr
+                 * @return {?}
+                 */function (cr) {
+                    return cr.toLowerCase() === backColor.toLowerCase();
+                }));
+                if (backColor$) {
+                    _this.backColor = backColor$;
+                    return true;
+                }
+            }));
+            // 加粗
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.isBold = AppZeditorComponent.FORMAT.isBold;
+                    return true;
+                }
+                if (e.nodeName === 'STRONG' || e.nodeName === 'B') {
+                    return _this.isBold = true;
+                }
+            }));
+            // 斜体
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.isItalic = AppZeditorComponent.FORMAT.isItalic;
+                    return true;
+                }
+                if (e.nodeName === 'EM' || e.nodeName === 'I') {
+                    return _this.isItalic = true;
+                }
+            }));
+            // 下划线
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.isUnderline = AppZeditorComponent.FORMAT.isUnderline;
+                    return true;
+                }
+                if (e.nodeName === 'U') {
+                    return _this.isUnderline = true;
+                }
+            }));
+            // 删除线
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.isStrikeThrough = AppZeditorComponent.FORMAT.isStrikeThrough;
+                    return true;
+                }
+                if (e.nodeName === 'STRIKE') {
+                    return _this.isStrikeThrough = true;
+                }
+            }));
+            // 上标，下标
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.scriptActive = AppZeditorComponent.FORMAT.scriptActive;
+                    return true;
+                }
+                if (e.nodeName === 'SUP') {
+                    return _this.scriptActive = 'superscript';
+                }
+                if (e.nodeName === 'SUB') {
+                    return _this.scriptActive = 'subscript';
+                }
+            }));
+            // 对齐方式
+            this.grandChildTograndParent(p, ( /**
+             * @param {?} e
+             * @return {?}
+             */function (e) {
+                if (e === _this.pannel) {
+                    _this.justifyActive = AppZeditorComponent.FORMAT.justifyActive;
+                    return true;
+                }
+                /** @type {?} */
+                var textAlign = e.getAttribute('align') || e.style.textAlign;
+                if (textAlign === 'left') {
+                    return _this.justifyActive = 'justifyLeft';
+                }
+                else if (textAlign === 'center') {
+                    return _this.justifyActive = 'justifyCenter';
+                }
+                else if (textAlign === 'right') {
+                    return _this.justifyActive = 'justifyRight';
+                }
+                else if (textAlign === 'justify') {
+                    return _this.justifyActive = 'justifyFull';
+                }
+            }));
+        };
+        /**
+         * 从最深层节点到最外层节点执行回调
+         * @private
+         * @param {?} start 最深层节点
+         * @param {?} fn 回调 直到回调返回true时才会终止回调的执行
+         * @return {?}
+         */
+        AppZeditorComponent.prototype.grandChildTograndParent = function (start, fn) {
+            /** @type {?} */
+            var o = start;
+            while (!!o) {
+                if (fn(o)) {
+                    return;
+                }
+                o = o.parentNode;
+            }
+        };
+        /**
          * 找目标元素的的某个标签的urls和base64的url
+         * @private
          * @param {?} target 元素
          * @param {?} tag 标签
          * @return {?}
@@ -3016,6 +3294,7 @@
         };
         /**
          * 判断范围Range是否和代码区有交集
+         * @private
          * @return {?} true - 有交集，false - 无交集
          */
         AppZeditorComponent.prototype.isRangeInCode = function () {
@@ -3057,6 +3336,7 @@
         };
         /**
          * toast提示
+         * @private
          * @param {?=} text
          * @param {?=} obj
          * @return {?}
@@ -3067,6 +3347,7 @@
         };
         /**
          * 弹窗
+         * @private
          * @param {?} obj
          * @return {?}
          */
@@ -3075,6 +3356,7 @@
         };
         /**
          * 防抖
+         * @private
          * @param {?} f 回调
          * @param {?=} t
          * @return {?}
@@ -3096,17 +3378,22 @@
      * 默认格式
      */
     AppZeditorComponent.FORMAT = {
+        isBold: false,
+        isItalic: false,
+        isUnderline: false,
+        isStrikeThrough: false,
+        scriptActive: '',
         formatBlock: 'p',
-        foreColor: 'black',
-        backColor: 'white',
+        foreColor: '#000000',
+        backColor: '#ffffff',
         justifyActive: 'justifyLeft',
-        fontSize: { key: 'small', value: '3' },
+        fontSize: { key: 'small', value: '2', value$: '' },
         fontFamily: { key: '微软雅黑', value: 'Microsoft Yahei' }
     };
     AppZeditorComponent.decorators = [
         { type: core.Component, args: [{
                     selector: 'app-zeditor',
-                    template: "<div [ngClass]=\"theme\">\r\n  <div class=\"z-editor\" #editorRef (click)=\"hideSwitchPannel($event)\">\r\n    <!-- \u7F16\u8F91\u6761\u5F00\u59CB -->\r\n    <div class=\"wd-editor-bar fn-clearfix\" #headerRef>\r\n      <!-- \u4E8B\u4EF6\u6267\u884C\u5BCC\u6587\u672C\u547D\u4EE4[\u5931\u7126\u65F6\uFF0C\u547D\u4EE4\u6267\u884C\u65E0\u6548\uFF0C\u6240\u4EE5\u8981\u963B\u6B62\u5931\u7126\uFF0C\u6216\u8005\u5728\u4E8B\u4EF6\u6267\u884C\u524D\u805A\u7126] -->\r\n      <!-- \u5907\u6CE8!!!! -->\r\n      <!-- mousedown\u4E8B\u4EF6\u5728\u81EA\u8EAB\u805A\u7126\u4E4B\u524D[\u5373\u5176\u4ED6\u5143\u7D20\u5931\u7126\u805A\u7126\u4E4B\u524D]\u6267\u884C -->\r\n      <!-- \u4E0B\u9762\u4F7F\u7528mousedown\u4E8B\u4EF6\u662F\u56E0\u4E3A\u53EF\u4EE5\u4F7F\u7528e.preventDefault()\u963B\u6B62\u9ED8\u8BA4\u4E8B\u4EF6\uFF0C\u963B\u6B62\u7F16\u8F91\u9762\u677F\u5931\u7126 -->\r\n      <!-- \u800C\u9488\u5BF9\u5FC5\u5B9A\u8981\u5931\u7126\u7684\u60C5\u51B5\uFF0C\u5219\u91C7\u7528\u8BB0\u4F4F\u5149\u6807\uFF0C\u518D\u8BBE\u7F6E\u4E0A\u6B21\u8BB0\u4F4F\u7684\u5149\u6807\u7684\u65B9\u5F0F\u6765\u505A\u5230\u4F2A\u5931\u7126\u3002 -->\r\n      <!-- \u5B57\u4F53 -->\r\n      <div #fontNameRef class=\"wd-edit-link-box fontName\" (mousedown)=\"setFontName($event)\">\r\n        <a data-tip=\"\u5B57\u4F53\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span [ngStyle]=\"{'font-family': fontFamily.value}\">{{fontFamily.key}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFontFamilyPannel\" class=\"wd-font-name-list\">\r\n          <li *ngFor=\"let ff of fontFamilys, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\" [ngStyle]=\"{'font-family': ff.value}\">{{ff.key}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u5B57\u53F7 -->\r\n      <div #fontSizeRef class=\"wd-edit-link-box fontSize\" (mousedown)=\"setFontSize($event)\">\r\n        <a data-tip=\"\u5B57\u53F7\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span>{{fontSize.key}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFontSizePannel\" class=\"wd-font-size-list\">\r\n          <li *ngFor=\"let fs of fontSizes, index as i\">\r\n            <!-- \u6CE8\u610F\u8FD9\u91CCstyle\u7684fontSize\u7ED1\u5B9A\u7684\u662Fx-small\uFF0Csmall\u8FD9\u79CD\u503C -->\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\" [ngStyle]=\"{'font-size': fs.key}\">{{fs.key}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6587\u672C\u683C\u5F0F -->\r\n      <div #formatBlockRef class=\"wd-edit-link-box formatBlock\" (mousedown)=\"setFormatBlock($event)\">\r\n        <a data-tip=\"\u6587\u672C\u683C\u5F0F\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span>{{formatBlock}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFormatBlockPannel\" class=\"wd-format-block-list\">\r\n          <li *ngFor=\"let fb of formatBlocks, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\" [innerHTML]=\"fb.value | safeHTML\"></a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6587\u672C\u8272 -->\r\n      <div #foreColorRef class=\"wd-edit-link-box foreColor\" (mousedown)=\"setForeColor($event)\">\r\n        <a data-tip=\"\u5B57\u8272\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-font-color\" [ngStyle]=\"{'border-bottom-color': foreColor}\"></i>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <div class=\"wd-color-list\" [hidden]=\"!switchForeColorPannel\">\r\n          <ul>\r\n            <li class=\"wd-tr\" *ngFor=\"let color of colors, index as i\">\r\n              <ul>\r\n                <li class=\"wd-td\" *ngFor=\"let e of color, index as j\">\r\n                  <a href=\"javascript:void 0\" [attr.data-dim1]=\"i\" [attr.data-dim2]=\"j\"\r\n                    [ngStyle]=\"{'background-color': e}\"></a>\r\n                </li>\r\n              </ul>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n      <!-- \u9AD8\u4EAE\u8272 -->\r\n      <div #backColorRef class=\"wd-edit-link-box backColor\" (mousedown)=\"setBackColor($event)\">\r\n        <a data-tip=\"\u9AD8\u4EAE\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-pencil\" [ngStyle]=\"{'border-bottom-color': backColor}\"></i>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <div class=\"wd-color-list\" [hidden]=\"!switchBackColorPannel\">\r\n          <ul>\r\n            <li class=\"wd-tr\" *ngFor=\"let color of colors, index as i\">\r\n              <ul>\r\n                <li class=\"wd-td\" *ngFor=\"let e of color, index as j\">\r\n                  <a href=\"javascript:void 0\" [attr.data-dim1]=\"i\" [attr.data-dim2]=\"j\"\r\n                    [ngStyle]=\"{'background-color': e}\"></a>\r\n                </li>\r\n              </ul>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n      <!-- \u662F\u5426\u52A0\u7C97 -->\r\n      <div class=\"wd-edit-link-box bold\" (mousedown)=\"switchBold($event)\">\r\n        <a data-tip=\"\u52A0\u7C97\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-bold\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u662F\u5426\u659C\u4F53 -->\r\n      <div class=\"wd-edit-link-box italic\" (mousedown)=\"switchItalic($event)\">\r\n        <a data-tip=\"\u659C\u4F53\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-italic\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u662F\u5426\u4E0B\u5212\u7EBF -->\r\n      <div class=\"wd-edit-link-box underline\" (mousedown)=\"switchUnderline($event)\">\r\n        <a data-tip=\"\u4E0B\u5212\u7EBF\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-underline\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5220\u9664\u7EBF -->\r\n      <div class=\"wd-edit-link-box strikeThrough\" (mousedown)=\"switchStrikeThrough($event)\">\r\n        <a data-tip=\"\u5220\u9664\u7EBF\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-strikethrough\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u4E0A\u6807 - \u4E0D\u53EF\u5173 -->\r\n      <div class=\"wd-edit-link-box superscript\" (mousedown)=\"superscript($event)\">\r\n        <a data-tip=\"\u4E0A\u6807\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-superscript\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u4E0B\u6807 - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box subscript\" (mousedown)=\"subscript($event)\">\r\n        <a data-tip=\"\u4E0B\u6807\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-subscript\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u5DE6 - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box justifyLeft\" (mousedown)=\"setJustifyactive($event, 'Left')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyLeft'}\" data-tip=\"\u5C45\u5DE6\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-left\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u4E2D - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box justifyCenter\" (mousedown)=\"setJustifyactive($event, 'Center')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyCenter'}\" data-tip=\"\u5C45\u4E2D\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-center\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u53F3 - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box justifyRight\" (mousedown)=\"setJustifyactive($event, 'Right')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyRight'}\" data-tip=\"\u5C45\u53F3\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-right\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5DE6\u53F3\u5BF9\u9F50 - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box justifyFull\" (mousedown)=\"setJustifyactive($event, 'Full')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyFull'}\" data-tip=\"\u5DE6\u53F3\u5BF9\u9F50\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-justify\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6587\u672C\u7F29\u8FDB - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box indent\" (mousedown)=\"indent($event)\">\r\n        <a data-tip=\"\u7F29\u8FDB\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-indent-increase\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6587\u672C\u589E\u8FDB  - \u4E0D\u53EF\u5173-->\r\n      <div class=\"wd-edit-link-box outdent\" (mousedown)=\"outdent($event)\">\r\n        <a data-tip=\"\u51CF\u5C11\u7F29\u8FDB\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-indent-decrease\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6E05\u9664\u683C\u5F0F -->\r\n      <div class=\"wd-edit-link-box removeFormat\" (mousedown)=\"removeFormat()\">\r\n        <a data-tip=\"\u6E05\u9664\u683C\u5F0F\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-clear-formatting\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6709\u5E8F\u5217\u8868 -->\r\n      <div class=\"wd-edit-link-box insertOrderedList\" (mousedown)=\"insertOrderedList($event)\">\r\n        <a data-tip=\"\u6709\u5E8F\u5217\u8868\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-list-numbered\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u65E0\u5E8F\u5217\u8868 -->\r\n      <div class=\"wd-edit-link-box insertUnorderedList\" (mousedown)=\"insertUnorderedList($event)\">\r\n        <a data-tip=\"\u65E0\u5E8F\u5217\u8868\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-list2\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u8868\u683C mdn\u65E0api\uFF0C\u7528insertHTML\u5B9E\u73B0 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"insertTable($event)\">\r\n        <a data-tip=\"\u8868\u683C\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-table\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u8D85\u94FE\u63A5\uFF0C\u5F39\u7A97 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"insertLink($event)\">\r\n        <a data-tip=\"\u94FE\u63A5\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-link\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u6C34\u5E73\u7EBFhr -->\r\n      <div class=\"wd-edit-link-box insertHorizontalRule\" (mousedown)=\"insertHorizontalRule($event)\">\r\n        <a data-tip=\"\u6C34\u5E73\u7EBF\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-page-break\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u6587\u4EF6 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"insertFile($event)\">\r\n        <a data-tip=\"\u6587\u4EF6\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-upload-cloud\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u4EE3\u7801 -->\r\n      <div #codeRef class=\"wd-edit-link-box insertHTML\" (mousedown)=\"insertCode($event)\">\r\n        <a data-tip=\"\u4EE3\u7801\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-embed\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchCodePannel\" class=\"wd-code-list\">\r\n          <li *ngFor=\"let code of codes, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\">{{code}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6362\u884C -->\r\n      <div class=\"wd-edit-link-box insertBrOnReturn\" (mousedown)=\"insertBrOnReturn($event)\">\r\n        <a data-tip=\"\u6362\u884C(shift+enter)\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-arrow-down\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u7C98\u8D34 -->\r\n      <div class=\"wd-edit-link-box paste\" (mousedown)=\"paste($event)\">\r\n        <a data-tip=\"\u7C98\u8D34\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-clipboard\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u590D\u5236 -->\r\n      <div class=\"wd-edit-link-box copy\" (mousedown)=\"copy($event)\">\r\n        <a data-tip=\"\u590D\u5236\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-copy\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u526A\u5207 -->\r\n      <div class=\"wd-edit-link-box cut\" (mousedown)=\"cut($event)\">\r\n        <a data-tip=\"\u526A\u5207\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-scissors-bold\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u9009\u62E9\u5168\u90E8 -->\r\n      <div class=\"wd-edit-link-box selectAll\" (mousedown)=\"selectAll($event)\">\r\n        <a data-tip=\"\u9009\u62E9\u5168\u90E8\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-select_all\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u64A4\u9500 -->\r\n      <div class=\"wd-edit-link-box undo\" (mousedown)=\"undo($event)\">\r\n        <a data-tip=\"\u64A4\u9500\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-undo\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u91CD\u505A -->\r\n      <div class=\"wd-edit-link-box redo\" (mousedown)=\"redo($event)\">\r\n        <a data-tip=\"\u91CD\u505A\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-redo\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5220\u9664 -->\r\n      <div class=\"wd-edit-link-box delete\" (mousedown)=\"deleteSelect($event)\">\r\n        <a data-tip=\"\u5220\u9664\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-eraser\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5168\u5C4F -->\r\n      <div class=\"wd-edit-link-box history\" (mousedown)=\"history()\">\r\n        <a data-tip=\"\u5386\u53F2\u8F93\u5165\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-database\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5168\u5C4F -->\r\n      <div class=\"wd-edit-link-box full\" (mousedown)=\"SwitchScreen()\">\r\n        <a data-tip=\"\u5168\u5C4F/\u53D6\u6D88\u5168\u5C4F\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon\" [ngClass]=\"full?'icon-minimize':'icon-maximize'\"></i>\r\n        </a>\r\n      </div>\r\n    </div>\r\n    <!-- \u7F16\u8F91\u6761\u7ED3\u675F -->\r\n    <!-- \u7F16\u8F91\u4F53\u5F00\u59CB -->\r\n    <!-- input,selectionchange,click\u4E8B\u4EF6\u8BB0\u5F55\u4E0A\u6B21\u7F16\u8F91\u7684\u5149\u6807 -->\r\n    <!-- mousedown\u4E8B\u4EF6\u5728\u9F20\u6807\u6309\u4E0B\uFF0C\u5224\u65AD\u662F\u5426\u8981\u8BBE\u7F6E\u805A\u7126\u5E76\u8BBE\u7F6E\u4E0A\u6B21\u5149\u6807\u548C\u91CD\u8BBE\u7F16\u8F91\u6837\u5F0F -->\r\n\r\n    <div #pannelRef (keyup)=\"setRange()\" (click)=\"pannelOnClick()\" (keydown)=\"keydown($event)\"\r\n      (blur)=\"isInEditStatus=false\" (paste)=\"pannelOnPaste($event)\" (beforepaste)=\"pannelOnPaste($event)\"\r\n      (input)=\"setRangeAndEmitValue($event)\" class=\"wd-deitor-content\" contenteditable=\"true\" [innerHTML]=\"vhtml|safeHTML\">\r\n    </div>\r\n    <!-- \u7F16\u8F91\u4F53\u7ED3\u675F -->\r\n    <div class=\"wd-edit-footer fn-clearfix\" #footerRef>\r\n      <div class=\"wd-edit-footer-btn\" *ngIf=\"hasBtn\">\r\n        <button (click)=\"emitContent\">\u4FDD\u5B58</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>",
+                    template: "<div [ngClass]=\"theme\">\r\n  <div class=\"z-editor\" #editorRef (click)=\"hideSwitchPannel($event)\">\r\n    <!-- \u7F16\u8F91\u6761\u5F00\u59CB -->\r\n    <div class=\"wd-editor-bar fn-clearfix\" #headerRef>\r\n      <!-- \u4E8B\u4EF6\u6267\u884C\u5BCC\u6587\u672C\u547D\u4EE4[\u5931\u7126\u65F6\uFF0C\u547D\u4EE4\u6267\u884C\u65E0\u6548\uFF0C\u6240\u4EE5\u8981\u963B\u6B62\u5931\u7126\uFF0C\u6216\u8005\u5728\u4E8B\u4EF6\u6267\u884C\u524D\u805A\u7126] -->\r\n      <!-- \u5907\u6CE8!!!! -->\r\n      <!-- mousedown\u4E8B\u4EF6\u5728\u81EA\u8EAB\u805A\u7126\u4E4B\u524D[\u5373\u5176\u4ED6\u5143\u7D20\u5931\u7126\u805A\u7126\u4E4B\u524D]\u6267\u884C -->\r\n      <!-- \u4E0B\u9762\u4F7F\u7528mousedown\u4E8B\u4EF6\u662F\u56E0\u4E3A\u53EF\u4EE5\u4F7F\u7528e.preventDefault()\u963B\u6B62\u9ED8\u8BA4\u4E8B\u4EF6\uFF0C\u963B\u6B62\u7F16\u8F91\u9762\u677F\u5931\u7126 -->\r\n      <!-- \u800C\u9488\u5BF9\u5FC5\u5B9A\u8981\u5931\u7126\u7684\u60C5\u51B5\uFF0C\u5219\u91C7\u7528\u8BB0\u4F4F\u5149\u6807\uFF0C\u518D\u8BBE\u7F6E\u4E0A\u6B21\u8BB0\u4F4F\u7684\u5149\u6807\u7684\u65B9\u5F0F\u6765\u505A\u5230\u4F2A\u5931\u7126\u3002 -->\r\n      <!-- \u5B57\u4F53 -->\r\n      <div #fontNameRef class=\"wd-edit-link-box fontName\" (mousedown)=\"!inCode&&setFontName($event)\">\r\n        <a data-tip=\"\u5B57\u4F53\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span [ngStyle]=\"{'font-family': fontFamily.value}\">{{fontFamily.key}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFontFamilyPannel\" class=\"wd-font-name-list\">\r\n          <li *ngFor=\"let ff of fontFamilys, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\" [ngStyle]=\"{'font-family': ff.value}\">{{ff.key}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u5B57\u53F7 -->\r\n      <div #fontSizeRef class=\"wd-edit-link-box fontSize\" (mousedown)=\"!inCode&&setFontSize($event)\">\r\n        <a data-tip=\"\u5B57\u53F7\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span>{{fontSize.key}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFontSizePannel\" class=\"wd-font-size-list\">\r\n          <li *ngFor=\"let fs of fontSizes, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\">{{fs.key}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6587\u672C\u683C\u5F0F -->\r\n      <div #formatBlockRef class=\"wd-edit-link-box formatBlock\" (mousedown)=\"!inCode&&setFormatBlock($event)\">\r\n        <a data-tip=\"\u6587\u672C\u683C\u5F0F\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <span>{{formatBlock}}</span>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchFormatBlockPannel\" class=\"wd-format-block-list\">\r\n          <li *ngFor=\"let fb of formatBlocks, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\" [innerHTML]=\"fb.value | safeHTML\"></a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6587\u672C\u8272 -->\r\n      <div #foreColorRef class=\"wd-edit-link-box foreColor\" (mousedown)=\"!inCode&&setForeColor($event)\">\r\n        <a data-tip=\"\u5B57\u8272\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-font-color\" [ngStyle]=\"{'border-bottom-color': foreColor}\"></i>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <div class=\"wd-color-list\" [hidden]=\"!switchForeColorPannel\">\r\n          <ul>\r\n            <li class=\"wd-tr\" *ngFor=\"let color of colors, index as i\">\r\n              <ul>\r\n                <li class=\"wd-td\" *ngFor=\"let e of color, index as j\">\r\n                  <a href=\"javascript:void 0\" [attr.data-dim1]=\"i\" [attr.data-dim2]=\"j\"\r\n                    [ngStyle]=\"{'background-color': e}\"></a>\r\n                </li>\r\n              </ul>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n      <!-- \u9AD8\u4EAE\u8272 -->\r\n      <div #backColorRef class=\"wd-edit-link-box backColor\" (mousedown)=\"!inCode&&setBackColor($event)\">\r\n        <a data-tip=\"\u9AD8\u4EAE\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-pencil\" [ngStyle]=\"{'border-bottom-color': backColor}\"></i>\r\n          <i class=\"z-editor-icomoon icon-caret-down\"></i>\r\n        </a>\r\n        <div class=\"wd-color-list\" [hidden]=\"!switchBackColorPannel\">\r\n          <ul>\r\n            <li class=\"wd-tr\" *ngFor=\"let color of colors, index as i\">\r\n              <ul>\r\n                <li class=\"wd-td\" *ngFor=\"let e of color, index as j\">\r\n                  <a href=\"javascript:void 0\" [attr.data-dim1]=\"i\" [attr.data-dim2]=\"j\"\r\n                    [ngStyle]=\"{'background-color': e}\"></a>\r\n                </li>\r\n              </ul>\r\n            </li>\r\n          </ul>\r\n        </div>\r\n      </div>\r\n      <!-- \u662F\u5426\u52A0\u7C97 -->\r\n      <div class=\"wd-edit-link-box bold\" (mousedown)=\"!inCode&&switchBold($event)\">\r\n        <a data-tip=\"\u52A0\u7C97\"  [ngClass]=\"{active:isBold,disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-bold\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u662F\u5426\u659C\u4F53 -->\r\n      <div class=\"wd-edit-link-box italic\" (mousedown)=\"!inCode&&switchItalic($event)\">\r\n        <a data-tip=\"\u659C\u4F53\" [ngClass]=\"{active:isItalic,disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-italic\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u662F\u5426\u4E0B\u5212\u7EBF -->\r\n      <div class=\"wd-edit-link-box underline\" (mousedown)=\"!inCode&&switchUnderline($event)\">\r\n        <a data-tip=\"\u4E0B\u5212\u7EBF\" [ngClass]=\"{active:isUnderline,disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-underline\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5220\u9664\u7EBF -->\r\n      <div class=\"wd-edit-link-box strikeThrough\" (mousedown)=\"!inCode&&switchStrikeThrough($event)\">\r\n        <a data-tip=\"\u5220\u9664\u7EBF\" [ngClass]=\"{active:isStrikeThrough,disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-strikethrough\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u4E0A\u6807  -->\r\n      <div class=\"wd-edit-link-box superscript\" (mousedown)=\"!inCode&&setScript($event, 'superscript')\">\r\n        <a data-tip=\"\u4E0A\u6807\" [ngClass]=\"{active:scriptActive==='superscript',disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-superscript\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u4E0B\u6807 -->\r\n      <div class=\"wd-edit-link-box subscript\" (mousedown)=\"!inCode&&setScript($event, 'subscript')\">\r\n        <a data-tip=\"\u4E0B\u6807\" [ngClass]=\"{active:scriptActive==='subscript',disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-subscript\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u5DE6 -->\r\n      <div class=\"wd-edit-link-box justifyLeft\" (mousedown)=\"!inCode&&setJustifyactive($event, 'Left')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyLeft',disabled:inCode}\" data-tip=\"\u5C45\u5DE6\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-left\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u4E2D -->\r\n      <div class=\"wd-edit-link-box justifyCenter\" (mousedown)=\"!inCode&&setJustifyactive($event, 'Center')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyCenter',disabled:inCode}\" data-tip=\"\u5C45\u4E2D\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-center\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5C45\u53F3 -->\r\n      <div class=\"wd-edit-link-box justifyRight\" (mousedown)=\"!inCode&&setJustifyactive($event, 'Right')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyRight',disabled:inCode}\" data-tip=\"\u5C45\u53F3\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-right\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5DE6\u53F3\u5BF9\u9F50 -->\r\n      <div class=\"wd-edit-link-box justifyFull\" (mousedown)=\"!inCode&&setJustifyactive($event, 'Full')\">\r\n        <a [ngClass]=\"{'wd-edit-link-active': justifyActive === 'justifyFull',disabled:inCode}\" data-tip=\"\u5DE6\u53F3\u5BF9\u9F50\" class=\"wd-edit-link\"\r\n          href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-paragraph-justify\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6587\u672C\u7F29\u8FDB -->\r\n      <div class=\"wd-edit-link-box indent\" (mousedown)=\"!inCode&&indent($event)\">\r\n        <a data-tip=\"\u7F29\u8FDB\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-indent-increase\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6587\u672C\u589E\u8FDB  -->\r\n      <div class=\"wd-edit-link-box outdent\" (mousedown)=\"!inCode&&outdent($event)\">\r\n        <a data-tip=\"\u51CF\u5C11\u7F29\u8FDB\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-indent-decrease\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6E05\u9664\u683C\u5F0F -->\r\n      <div class=\"wd-edit-link-box removeFormat\" (mousedown)=\"!inCode&&removeFormat()\">\r\n        <a data-tip=\"\u6E05\u9664\u683C\u5F0F\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-clear-formatting\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u6709\u5E8F\u5217\u8868 -->\r\n      <div class=\"wd-edit-link-box insertOrderedList\" (mousedown)=\"!inCode&&insertOrderedList($event)\">\r\n        <a data-tip=\"\u6709\u5E8F\u5217\u8868\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-list-numbered\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u65E0\u5E8F\u5217\u8868 -->\r\n      <div class=\"wd-edit-link-box insertUnorderedList\" (mousedown)=\"!inCode&&insertUnorderedList($event)\">\r\n        <a data-tip=\"\u65E0\u5E8F\u5217\u8868\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-list2\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u8868\u683C mdn\u65E0api\uFF0C\u7528insertHTML\u5B9E\u73B0 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"!inCode&&insertTable($event)\">\r\n        <a data-tip=\"\u8868\u683C\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-table\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u8D85\u94FE\u63A5\uFF0C\u5F39\u7A97 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"!inCode&&insertLink($event)\">\r\n        <a data-tip=\"\u94FE\u63A5\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-link\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u6C34\u5E73\u7EBFhr -->\r\n      <div class=\"wd-edit-link-box insertHorizontalRule\" (mousedown)=\"!inCode&&insertHorizontalRule($event)\">\r\n        <a data-tip=\"\u6C34\u5E73\u7EBF\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-page-break\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u6587\u4EF6 -->\r\n      <div class=\"wd-edit-link-box insertHTML\" (mousedown)=\"!inCode&&insertFile($event)\">\r\n        <a data-tip=\"\u6587\u4EF6\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-upload-cloud\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u63D2\u5165\u4EE3\u7801 -->\r\n      <div #codeRef class=\"wd-edit-link-box insertHTML\" (mousedown)=\"!inCode&&insertCode($event)\">\r\n        <a data-tip=\"\u4EE3\u7801\" [ngClass]=\"{disabled: inCode}\" class=\"wd-edit-link\" href=\"javascript:void 0\">\r\n          <i class=\"z-editor-icomoon icon-embed\"></i>\r\n        </a>\r\n        <ul [hidden]=\"!switchCodePannel\" class=\"wd-code-list\">\r\n          <li *ngFor=\"let code of codes, index as i\">\r\n            <a href=\"javascript:void 0\" [attr.data-index]=\"i\">{{code}}</a>\r\n          </li>\r\n        </ul>\r\n      </div>\r\n      <!-- \u6362\u884C -->\r\n      <div class=\"wd-edit-link-box insertBrOnReturn\" (mousedown)=\"insertBrOnReturn($event)\">\r\n        <a data-tip=\"\u6362\u884C(shift+enter)\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-arrow-down\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u7C98\u8D34 -->\r\n      <div class=\"wd-edit-link-box paste\" (mousedown)=\"paste($event)\">\r\n        <a data-tip=\"\u7C98\u8D34\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-clipboard\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u590D\u5236 -->\r\n      <div class=\"wd-edit-link-box copy\" (mousedown)=\"copy($event)\">\r\n        <a data-tip=\"\u590D\u5236\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-copy\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u526A\u5207 -->\r\n      <div class=\"wd-edit-link-box cut\" (mousedown)=\"cut($event)\">\r\n        <a data-tip=\"\u526A\u5207\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-scissors-bold\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u9009\u62E9\u5168\u90E8 -->\r\n      <div class=\"wd-edit-link-box selectAll\" (mousedown)=\"selectAll($event)\">\r\n        <a data-tip=\"\u9009\u62E9\u5168\u90E8\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-select_all\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u64A4\u9500 -->\r\n      <div class=\"wd-edit-link-box undo\" (mousedown)=\"undo($event)\">\r\n        <a data-tip=\"\u64A4\u9500\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-undo\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u91CD\u505A -->\r\n      <div class=\"wd-edit-link-box redo\" (mousedown)=\"redo($event)\">\r\n        <a data-tip=\"\u91CD\u505A\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-redo\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5220\u9664 -->\r\n      <div class=\"wd-edit-link-box delete\" (mousedown)=\"deleteSelect($event)\">\r\n        <a data-tip=\"\u5220\u9664\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-eraser\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5168\u5C4F -->\r\n      <div class=\"wd-edit-link-box history\" (mousedown)=\"history()\">\r\n        <a data-tip=\"\u5386\u53F2\u8F93\u5165\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon icon-database\"></i>\r\n        </a>\r\n      </div>\r\n      <!-- \u5168\u5C4F -->\r\n      <div class=\"wd-edit-link-box full\" (mousedown)=\"SwitchScreen()\">\r\n        <a data-tip=\"\u5168\u5C4F/\u53D6\u6D88\u5168\u5C4F\" class=\"wd-edit-link\" href=\"javascript: void 0\">\r\n          <i class=\"z-editor-icomoon\" [ngClass]=\"full?'icon-minimize':'icon-maximize'\"></i>\r\n        </a>\r\n      </div>\r\n    </div>\r\n    <!-- \u7F16\u8F91\u6761\u7ED3\u675F -->\r\n    <!-- \u7F16\u8F91\u4F53\u5F00\u59CB -->\r\n    <!-- input,selectionchange,click\u4E8B\u4EF6\u8BB0\u5F55\u4E0A\u6B21\u7F16\u8F91\u7684\u5149\u6807 -->\r\n    <!-- mousedown\u4E8B\u4EF6\u5728\u9F20\u6807\u6309\u4E0B\uFF0C\u5224\u65AD\u662F\u5426\u8981\u8BBE\u7F6E\u805A\u7126\u5E76\u8BBE\u7F6E\u4E0A\u6B21\u5149\u6807\u548C\u91CD\u8BBE\u7F16\u8F91\u6837\u5F0F -->\r\n\r\n    <div #pannelRef (keyup)=\"keyup($event)\" (click)=\"pannelOnClick()\" (keydown)=\"keydown($event)\"\r\n      (blur)=\"isInEditStatus=false\" (paste)=\"pannelOnPaste($event)\" (beforepaste)=\"pannelOnPaste($event)\"\r\n      (input)=\"setRangeAndEmitValue($event)\" class=\"wd-deitor-content\" contenteditable=\"true\" [innerHTML]=\"vhtml|safeHTML\">\r\n    </div>\r\n    <!-- \u7F16\u8F91\u4F53\u7ED3\u675F -->\r\n    <div *ngIf=\"hasBtn\" class=\"wd-edit-footer fn-clearfix\" #footerRef>\r\n      <div class=\"wd-edit-footer-btn\">\r\n        <button (click)=\"emitContent()\">\u4FDD\u5B58</button>\r\n      </div>\r\n    </div>\r\n  </div>\r\n</div>",
                     providers: [{
                             provide: forms.NG_VALUE_ACCESSOR,
                             useExisting: core.forwardRef(( /**
@@ -3115,7 +3402,7 @@
                             multi: true
                         }],
                     encapsulation: core.ViewEncapsulation.None,
-                    styles: ["@charset \"UTF-8\";a,a:after,a:before,audio,div,div:after,div:before,h1,h2,h3,h4,h5,h6,i,i:after,i:before,img,li,li:after,li:before,ol,p,pre,span,span:after,span:before,table,ul,video{-moz-box-sizing:border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}em,i{font-style:italic}table{border-collapse:collapse;border-spacing:0}img{border:none;height:auto;vertical-align:middle;width:100%}a:active,a:hover,a:link,a:visited{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;color:#000;cursor:pointer;text-decoration:none;user-select:none}hr{background-color:#e1e1e1;border:0;color:#000;height:1PX;margin:0;*margin:0}li,ul{list-style-type:none}button,input[type=button],input[type=reset],input[type=submit]{-moz-appearance:button;-ms-appearance:button;-o-appearance:button;-webkit-appearance:button;appearance:button;border:none}button,button:focus,input,input:focus{background-color:#fff;outline:none;outline-style:none}input{border:1px solid #e6e6e6}::-ms-clear,::-ms-reveal{display:none}input:-ms-clear,input:-ms-reveal{display:none}[tappable]{-ms-touch-action:manipulation;cursor:pointer;touch-action:manipulation}.z-editor-icomoon,[class*=\" icon-\"],[class^=icon-]{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:z-editor-icomoon!important;font-size:.75rem;font-style:normal;font-variant:normal;font-weight:400;line-height:.75rem;line-height:1;speak:never;text-transform:none}@font-face{font-display:block;font-family:z-editor-icomoon;font-style:normal;font-weight:400;src:url(\"data:application/font-woff;charset=utf-8;base64,d09GRgABAAAAABbUAA0AAAAAKUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAAWuAAAABoAAAAcjD/EOUdERUYAABacAAAAHAAAAB4AJwA2T1MvMgAAAZwAAAA/AAAAYA8TDt9jbWFwAAACPAAAAOMAAAJWyh7L2Gdhc3AAABaUAAAACAAAAAgAAAAQZ2x5ZgAAA4QAABFaAAAgQINXE/9oZWFkAAABMAAAADIAAAA2GpLhrWhoZWEAAAFkAAAAIAAAACQImgTxaG10eAAAAdwAAABeAAAAwK6bBiRsb2NhAAADIAAAAGIAAABivSS0wG1heHAAAAGEAAAAGAAAACAAQwDCbmFtZQAAFOAAAADcAAABm/pYTdhwb3N0AAAVvAAAANUAAAHpl/yTYXjaY2BkYGAA4tkH9B/E89t8ZeBmYQCB277nZsDo/z/+H2B5wHwAyOVgYAKJAgB+Gg6eAAB42mNgZGBgPvD/AAMDK8P/HwwMLA8YgCIowAAAi2wFlXjaY2BkYGAwYDjAIMQAAkwMaAAAGc8BBnjaY2Bmvsk4gYGVgYFpJtMZBgaGfgjN+JrBmJGTARUwCqAJMDgwMH68zXzg/wEGB2YgBqlBklVgYAQAgvQMBQB42mNhgADGUAjNBMQsDAwNQLwaiB1YIPxQKA3C2lB+KET+/w+oOqia//+A9AEobkDShxezMjAoMG9nYGBOAuI8sJgfkM/J5Anhg+XyGZiZCxmYWTzBdniCxAHOiRJjAAB42mNgYGBmgGAZBkYgycAYAOQxgvksjCZA2oPBgYGVgQMopvCS5SXXS8GXVi99Xma8bHzZ+XLCy0cvn7z8/PLnyz+vol6lvsp4lf+q8FXNq4YPhh8cPkR8mPbh4IfrHyU+qn/U/ej18fb/v///g+xAMSkdi0lJUJPKsZikjTDp/xNxRrE/Yt/EzontFVss1i3WIlYnpiumIyYnJikmLrpLdLPoRtHVoqtEl4ou4v/E/4T/LP8E/jT+QH5BfmZ+Br4nfCFgv3owUAcwgsKRkQ2ImaECTECCCUMVAwvD8AYA4VB3NwAAAAAAAAgACAAQABgAnADaASgBXgJ0AroC/gOkBEAE2AUsBcwGCgaOBtgHrgfwCCwIRAicCN4JDAlUCXoJognKCfAKHgpMCnQK/gtSC7YL6gymDM4NbA5cDtgPVA+GD8YQIAAAeNqVWWtsG1d2vmfuvMjha0gOhxQpvkYUJTO2ZJJD2YokM47tmpWjVRNJyW4SR9auF06yDjbexN4U+TFJ9+Ft0K5ho2mBOA+0adHKQYFdoHV+bGui6J8+F4siBXabbo0U3e42qAOkWCBozVHPvTOUKFvOg+SduY9zz71z7jnfOWdIgPQ/AiH7BfJJ7ThxSJs6tE0oUYhGoiRBTDJMSqRCxslu0iD7ySy5hxwmHfI5QkAv6axQu2GwMuXfsSQVmdWAtQzLxvowlKujdgPqZsqwKtjHxhJ9muZUC2sOEHcd3lrBzxK7rAwNlVfclaX1lfWV8tDQirDErhtkyV1Hgg3CCYT2BvHmuUsCdvVw3vrKCuDNJWwarCyxCSuUDeJ9nU1iF6RgPJBqhdEA586kAeQKeZIuU4OMYEPRm6NWWTb06mhZkZMm5MHMQ6PempqDKWg1WTcNv5eJxzPvhaxwKAQ1qog0IIqqKCoUaqFQ2ArDT9+DD/RMRnf198Lh0EjIfYdKIAD+JEYzEgqH2dqUtPHSpQ5JosznCEng0nv1ZKpRqrdstpV9sB+kUj1l6EnZKpVHbX0f7G22GntNRmkkU3cDdtRbs4DEe/957qGH5oQldu39HN5N5HIJd4Rdv6vFYtpfsgt1cOwtTrc89+Af9AkY8e8jSSgaDSEd7k0iZKMr4u6IitqRICmS41qgoBKUdDxUqjfskqHoCcOCEqsLjtvugiM4N7sns11od7sn4T9cgjWhC6Tb627gA//hSZdAFz94kCe9OiEiWd54n16hv0MsskCeJ9dQEpNc5HMo+5TJD2HvpKxEAH9WebS6B/AHw8A7Bvuqs+zI+JRUo85YcD66gWIyPi11Rc+Bt+jtY+zetPUZ8DlwTqgzjLO/QVQc44qgqNnk5IXl5QuTyayqCLe11wGVxu+aMLKoP6DqgZxlLdRqu3fXaguWlQvo6k5U6vAg1TB29AiAEYntymyfn9kVixgA3lh6+6y0Nya8L8tKTE2YZkKNKTI2sBVPp+PYUmT38WsCyHSLgMogXBNVqgUCISqKNBQIaFQVoXZNECSRTTVNNlWUhE06kVLRp/tKb12gglEOR80gZ4EfNhQ0o+GygUPCCohsPJLePp6OsHERPBxDvXRIDfXRF3tVL1WZqvDDMpJep8nPq2U3vRMSiF2vPzI+br0MzgX7pcXFw0cez+cDgXI6nV8eKxZ3h0JjYy8df/QJ6gS1ajZnvew6F5oz+fzjRw4v1sbGO8XS0KpVq621WvufePT4S2NjA3vZRYie9PRlytMIu8lXZ+qrlHRlm5qEQruLxbHlfDpdDgS8BRZfsi+A87I1Pv5IvW57/MHZ32qt1WrW6lCp2Bkfq3lbnmlyyly2qgX5jtFCa2g/76D9RBDB7yLT5ChZIV8iZ1BCiBENHx8Yrm1v4n7rqM4T4KPdtmYFCe3maA2QMJkqbWsxI0AsjALOStVvab3D4HGwuP/2HMe8r4c5ZP67d+d9vb+7wmiuIFoKP2BXnbVd+nWOm88xOIUP+C3Mu+iTm/R6b3lzQlyIDswIu/mBKZc/djvwwcBu+HEuEwOx6EnEu/1YZzJEUeG5DUNfdkyx7gYuDwvwgmfrywV7GWL4pLbvOXxxYy/j0xchFiT1+WAnY7N5MMvO0ISuG2y7aJMx1eEPuZKM6xNDvO6oMRxg4xtkB9reD3YipU9+agbx3vpOtLAj7S1y20eWyFe57g08L3vQLVkYkjX4wExgW8Kg9qCI2fwt8VcagxJm07ekDzUEsGjA2zJuM57MxPWMsOwEoohrGT2e2Xykv9iJsndlB0ra3qEzfuVTz99xJSav9kYXfX8XPWuZTJIWyqvkiabEDHUrCKig+0fvj86/2WKe1vCGZqEB1SmzYtI33Ovztj3vXg8nEmHaxqv7QLZSyWKBV3rESYShG06gd/6H6UuQmKZte37eToRvdvv0bU6L5aZDySrrXe2dvDF95sNpjBY3PiIGIvgZUiSnWATgabbehwruBXHXvvFPSQz1+u7V4jfPK3oOFY+VI6GHzb5r960Gf5ukUx6KrPEg6wrGWBhgoRJe4WYtyBMHwpFAJnWwau4dSpkP7Wu/fN99z1Uq6WSoNhyyImEhlCoHYvHh/KMzM8/urR+NialoSy/FhmpRXQ4Ex4vRoBpAwPq8+5/sYAAXQsa4EIZpgiKvc0g4nVmcmPjynrHpWCAI95wqjZrJ5KPtA797357FIq6AW8vMjXjso/Hh4eMzkbgia6PZwr3Fgq0j+1gwQGR2zjyO8uJsHRF6nJBKycA4yitV3bItO2E0MFKewhrGz9jTsL3CIqreZum2222n6zhdLOwjEPbDaKrb7n1Yb1+cwXLDZVRtFtn3bTKLNvkQjy9RvEy5WFRb4gbJVIwdIQszsZdFmixEKnHzxEFG05AULyAusOAGj/nApqvwoP8dDgpc54WVrTp6+xUOHRwqeutbdfittTUOwmtrHLe3tXyY6q3fxnXlNkb+Ald34uO38AzItjMwMc6cYPa2dQYI6o2+nel3qG8/CddhRrdToY6DkIo/z9KwuH92a4WIG+7Gh/SvcE+HyQlymnwH98MkrvAQoZrgdjIBmhdQpsyEwgOIUVnh35TJvy0MSrPAzm2qxePT6qiE9BjsRgbsbM4LZWUlwUHEeyAWO8ujVSTlRjpojwq9mCkVj5TLOUkVF9/WFEka0sM//nFYH5IkRXt7UVSlXLl8pFjKZLSQGI3m/Nabb/rzctGoGNJ6bbOZlGOyogLEYoP1XzKQwQJfA1XB3mTTjMVgWz1dzeWyEEfTfx6KxmQmXY2o7luwpEaq6cyk4V5/HhOuOGRzuWp1fHw+X4jrALlsrgqC61axAqDHC/n58fFfGxkRAUTJiJqtjMXrYiqSbqWhyDeBxb0WNSQ2MDKC/ZGUyOtWpmV6eRomKRSzZcTqAhnDk0Kz8cNK1J66H2eOgifZGiQs3asKf50rJpNH9kzYLqZG9sSeI8nkIfcbJ3fNzIx/+fXXX79rbg7+pbw04Y3cdDzaI8/AEY7omCSzu5e19/dQQO0l0NC9MNcqe+Gm3vCt2jNqpttC18lkHpy+++DBu6cfzGScbDrXGRvr5NJZlzANpo67OtO0F1KmmVqwmzPwhrua32ems9m0uS/vvuF4+THeKNKi3aBHt6BhlDC1xzzfcdwuOhUH2jja7pF2m+WzWzHxLKfP+1GA5+7thuc+0NGV7BJXPM/Xe17dsDwPyIhSpkjeN1L25F1Pz809fdek7ZxZWDhzZgFzxrswEZi0bxu5+6kadNvD95TttZHSCP7W7OaxY83msTZQwMat3aUCblW5BRvYe5AskzA6WmsKS2XgThOlRAML0BK1sDAcxtx28xaL9UisGBOcWK8do6zac2LgoTH7CG23DV08VucmAUQQaLtdrl+4B3qd74GhE7EZIuESCRRSoqpUp9DRT5mKKbR7XTy1H1395tvu/wjd8osvzvV/7BB6mGkj54FeQoKb5zH4nifLtahKSAYjCrBLw0LJBjxYCwuDQ+6ecBeoRuM4bIikh7rIXr5skLZ3E/yOm06/RZ2bbBMoC8z9UV95ls8l0+26rEW89wq37YewJY0BNGZFJDdJH2tZnRUUeJsBK/DrnXmZPg86wKu76ULvwO1j9ib1vcQAPxjwBJ91f7d++/MHC+flfRkbeQdeqa3d9b+sngFp+wa3NgmDbDGZdrqfkTfolTvz3hjkLmA3gyyMGx8Ur9NxlAbjTCpmABSzUg3AVBVMWqXtVWYGq9d7b6wiSLZXr8O/HukeuY69rHEdO9koPB7vteP87SUJ0Kv0HGr2FxBhaJ0BSgOhhLuwLDTQhSVSm+9u+j9EIaPMwEVptg5s4Xe1wl/aMMgxc2Dk0P+OeumeBa+dqC3V1JiaahbcNRhbiJ9/owMiPBuLRQuxWCxRNqgmR9pJQYDW6db+r+4DmA+VQ1o+HKHuBmb56UDwkQzs/VIdvVrWzgovuK4A9/zGgd753WF1D6zCa1Sm7o3R0eqx0dHK7odriiFpQSUQU0VFDCigpbQYDcbUQuFooRiAcL5wMDesliJU1TEaFkMiSNQ7OiaTNYzzFMy+SqROyAGoKhhQNrz0SkFn72X+U+zRqybiNyajUUwgOPQWAAX0w+a3mp1ZzKEkKgnu37I4WJAo2IJQuOFWbtC1UOCxG48Fs5FoNvjtQOj+5rebcx0hISkCo5YEWWGCwCmn/9sduQFvRrLBx24cD4ZCwW8Fs1H/zTPu8yk8uxFyD55dc5TlDzx56CcRfJ9sO/29mtvdXP+tivemR/ipJDelsKKGpV+8IEUUJSI1Jfz80KtDS5YuWOVzi4sPP7y4eM4ql61+vWwJw0jRkGRZ+vkL7Npkc8LyP8qSJENLCquPenRb8/t1fI4FEqHfx5wohtLGOHJ7wmaZm29rMdhib28p9Nyx6ekxQWDX753q9NzOqVMdQeicotb02Nbg2tbAqQ7aToDE6Z/Sq4jVRxlCbUlM4RrNnOqgxJhiD0p1mzS5q2V+lYUHST6K8xktc8HVwRbj01cL9N7mZou2VfWcmtRCyUAkWzSNXDQQUNVnsUdLqkuq6j7FWkbQayGtYvi0qVQuEggKZMhcMmdKpRnzrJnJphvmXKk0a54zMwP96aF0PT1b9vohgLzOqWogEM0ZZjEbCSTD2HNWVRRlSU3Aa7yhqsqSwjdxTkHSSC6V8kjd08VZ8wEzk0mfNWeL5TnkPJROn03zpR5Ip1n/TKk8ZzbS2Yx5Lj3jxTwEAkJHuJ8YWEty82Gi9oTDT1ToyNIG8VQP73IqKpCoIezxm7IEOKhGDSPq+xVP79OkQvai9jyJfD2eGKG3tuI2FnxX+sk+CyFLAw2zOfgS0UgOvppmf8N8jJ2cN5452vmaIUWikawYvW9y8r6IlI1GIpL7s1q+UKsV8jUY2YVXbO26NDz8xXvvnT928N4vDg+z+sFj8/eyeudOtgRfOLy8fBhZ4wK79+/fHY1IYjbykceuz3bX9wY5DtbvaGj4UX2872LmXMSs7QHy6+Q8eZn8MSFTflg52jwArbqZSiqmZxOzfjZXZbE4lx57w2BI25QeQ6o8eJ4A21N54NqOqdd221FYFnarUZjSNs6wbVnztm3930X2J5FCJemSFEV8WQ2qapAVJ6heVTRNuaoGhX/KpH0LuKZq0vnLsYkoN6FXNXRBXTPjvn7+8qadqerloKorXabY/VlKSIInGC9NY1zdv9EUVlW0X1yisrf8RZkt/1+XBEoFrF5EqItKaX8LSOuwGqt0mHUw5tdwce3VKOBeEmztV78jhZQumg+8Frw8YHaXf1PWeH/frK4pujrpPWUQJq6yGlvn+EVvbZQEri0zn0DJ/fQ0+q5dZAmjA8Pih2PxF0FR9FONqSpefD/emIMDAgbiitnAcJVnD/3ky/PaSrX/r1H/b4CGLcBvPxwRKAiYBgiq+PlLnaefWHh1UZSp1ylEFi/9yuPPHICvuD8RAAqF+WLBSuk5TdLEGSWuxe2Ruc/l80eLBfrN769eSKPTxh/a/ndX/+iV1RflkOz1pF9c/b0/gW+cjeKDTVtW3UgVUtlwQNJkW4sHIuah/Y1CYbeRLOzhvpBizP+U8AA+9/JneW7pUz9341M/+OmtBy+b7MGD0oyqb3vwo5/45M+fjSqRT3xwYcMl94vzdA+eewafe6qkQMpD2JIHh8zMEGIxgXA7Xfq/qhxxSXA45naMSgAbAtFyMbhqVF55913hVHJXrPfnobCZxIrwq1jx4oyOHyMaiLekAv5/GuD/SVGAVH0KbnHS8CM4rmnTWj7o/vK5YB5r2t9reQ1+duJQ791DJ04cEkYOnfgJPOYNIQ0nRhoNPtoiOLE9zsmR6c1/qW4BbB/MYUfc3usDN1y9HYU9dIardwJjuud2hPXq7sU7Iu3/A0PZiA4AAHjadc6xasJQGMXxfzRatCCdSul0R6eg4AN0KnVw6SAdG+MlBPReiBF07yN07DP0YXwiT8K3JnDD7zs35yPAjH8S2ifhgSfzQJ6bh/KbOZW/zCMeuZjHyn/NU165qZWkEyWzbkPrgfxiHsoLcyp/mEc8820eK/8xT1nxR0VB5KgTCVAV8Rij8Imn5MyBnFqjL8+HXOj7vi/fak/NSfdt7liS6S/Z+vpUxeCW2aK/+97NjVqltoRuU67Zs1e246r3uuturJupFEPjSh98nTd+73ZXty7iRvsy7uXbPkN42n3Ox04EMRCEYf+zsEvOOS05g+zJc5yw8yqAhBAXDrw90nSd8eVTu1plu8j9f7xzRC5i5EbMMc+YCQssssQyK6yyxjobbLLFNjvsssc+BxxyxDEnnHLGlHMuuOSKa2645Y57HnjkiWdeeB2/ff5+v4fJz9eH935wVvlU1mbQfaI5bc28kKVZaq+szMqbs1iqt0+k9nrrqzPrr/NYJjKVmSxlbxZBFlJ5UUn1Fo3Ue+Xwv94nwUw1Z6VZ5WarvBv6+xAsD7HmuJGt7My0NrvmD9P1ajwAAAAAAQAB//8AD3jaY2BkYGDgAWIxIGZiYARCfSBmAfMYAAWjAF542mNgYGBkAIKrS9Q5QPRt33MzYDQAQckGxgAA\") format(\"woff\")}.icon-square-m:before{content:\"\uE911\"}.icon-link:before{content:\"\uF0C1\"}.icon-caret-down:before{content:\"\uF0D7\"}.icon-unlink:before{content:\"\uF127\"}.icon-select_all:before{content:\"\uE904\"}.icon-copy:before{content:\"\uE93A\"}.icon-undo:before{content:\"\uE967\"}.icon-redo:before{content:\"\uE968\"}.icon-clipboard:before{content:\"\uE9E2\"}.icon-list-numbered:before{content:\"\uE9F3\"}.icon-list2:before{content:\"\uE9FC\"}.icon-scissors-bold:before{content:\"\uEA5A\"}.icon-bold:before{content:\"\uEA62\"}.icon-underline:before{content:\"\uEA63\"}.icon-italic:before{content:\"\uEA64\"}.icon-strikethrough:before{content:\"\uEA65\"}.icon-page-break:before{content:\"\uEA68\"}.icon-clear-formatting:before{content:\"\uEA6F\"}.icon-table:before{content:\"\uEA71\"}.icon-paragraph-left:before{content:\"\uEA77\"}.icon-paragraph-center:before{content:\"\uEA78\"}.icon-paragraph-right:before{content:\"\uEA79\"}.icon-paragraph-justify:before{content:\"\uEA7A\"}.icon-indent-increase:before{content:\"\uEA7B\"}.icon-indent-decrease:before{content:\"\uEA7C\"}.icon-embed:before{content:\"\uEA80\"}.icon-arrow-down:before{content:\"\uE90A\"}.icon-database:before{content:\"\uE94C\"}.icon-loader:before{content:\"\uE981\"}.icon-maximize:before{content:\"\uE989\"}.icon-minimize:before{content:\"\uE990\"}.icon-upload-cloud:before{content:\"\uE9E4\"}.icon-x-square:before{content:\"\uE9F9\"}.icon-smile-o:before{content:\"\uF118\"}.icon-font-color:before{content:\"\uF031\"}.icon-pencil:before{content:\"\uF040\"}.icon-check-circle-thin:before{content:\"\uF058\"}.icon-square-o:before{content:\"\uF096\"}.icon-superscript:before{content:\"\uF12B\"}.icon-subscript:before{content:\"\uF12C\"}.icon-eraser:before{content:\"\uF12D\"}.icon-check-square:before{content:\"\uF14A\"}.icon-circle-thin:before{content:\"\uF1DB\"}.z-editor-alert .wd-content,.z-editor-alert .wd-mask{height:100%;left:0;position:fixed;top:0;width:100%;z-index:99999}.z-editor-alert .wd-content{overflow:auto}#z-editor-tip .wd-tip,#z-editor-tip .wd-tip-for-scale{background-color:#333;border-radius:.3rem;color:#fff;filter:alpha(opacity=70);font-size:.75rem;left:50%;line-height:1;max-width:12rem;opacity:.7;padding:.7rem .8rem;position:fixed;text-align:center;z-index:9999999}#z-editor-tip .wd-tip{transform:translateX(-50%)}#z-editor-tip .trans1-enter{top:100%}#z-editor-tip .trans1-active{top:40%}#z-editor-tip .trans1-leave{top:100%}#z-editor-tip .trans2-enter{top:-100%}#z-editor-tip .trans2-active{top:40%}#z-editor-tip .trans2-leave{top:-100%}#z-editor-tip .scale-enter{filter:alpha(opacity=0);opacity:0;top:50%;transform:translate(-50%,-50%) scale(0)}#z-editor-tip .scale-active{filter:alpha(opacity=70);opacity:.7;top:50%;transform:translate(-50%,-50%) scale(1)}#z-editor-tip .scale-leave{filter:alpha(opacity=0);opacity:0;top:50%;transform:translate(-50%,-50%) scale(0)}#z-editor-tip .icon-loader{-webkit-animation:myloading 1s infinite forwards;animation:myloading 1s infinite forwards;display:inline-block}@-webkit-keyframes myloading{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes myloading{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}#z-editor-window .wd-mask{background-color:#3a3434;filter:alpha(opacity=20);opacity:.2}#z-editor-window .wd-window{background-color:#fff;border-radius:.3rem;position:absolute;z-index:99999}#z-editor-window .wd-window-tool{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;background-color:#f4f4f4;border-radius:.3rem .3rem 0 0;cursor:pointer;line-height:2rem;user-select:none}#z-editor-window .wd-window-tool h3{float:left;font-size:1rem;padding-left:.7rem}#z-editor-window .wd-window-tool p{float:right;padding-right:.7rem}#z-editor-window .wd-window-tool .z-editor-icomoon{cursor:pointer;font-size:1rem;line-height:2rem}#z-editor-window .wd-window-tool:after{clear:both;content:\"\";display:block}#z-editor-window .wd-window-pannel{overflow:auto;padding:.7rem}#z-editor-window .trans1-enter{top:100%}#z-editor-window .trans1-active{top:20%}#z-editor-window .trans1-leave{top:100%}#z-editor-window .trans2-enter{top:-100%}#z-editor-window .trans2-active{top:20%}#z-editor-window .trans2-leave{top:-100%}#z-editor-window .scale-enter{filter:alpha(opacity=0);opacity:0;top:20%;transform:scale(0)}#z-editor-window .scale-active{filter:alpha(opacity=100);opacity:1;top:20%;transform:scale(1)}#z-editor-window .scale-leave{filter:alpha(opacity=0);opacity:0;top:20%;transform:scale(0)}.z-editor-checkbox{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none;width:1rem}.z-editor-checkbox input{display:none}.z-editor-checkbox .z-editor-icomoon{cursor:pointer;font-size:1rem;vertical-align:middle}.z-editor-checkbox .wd-checkbox-disabled{cursor:not-allowed;opacity:.8}.r .z-editor-checkbox .icon-check-square{color:#fa6464}.p .z-editor-checkbox .icon-check-square{color:#00c}.b .z-editor-checkbox .icon-check-square{color:#3b86cc}.g .z-editor-checkbox .icon-check-square{color:#19a519}.z-editor-radios{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none}.z-editor-radios .input-radio{display:none}.z-editor-radios .z-editor-icomoon{cursor:pointer;font-size:1rem}.z-editor-radios .z-editor-icomoon,.z-editor-radios span{line-height:1;vertical-align:middle}.z-editor-radios .wd-radio-disabled{cursor:not-allowed;opacity:.8}.r .z-editor-radios .icon-check-circle-thin{color:#fa6464}.p .z-editor-radios .icon-check-circle-thin{color:#00c}.b .z-editor-radios .icon-check-circle-thin{color:#3b86cc}.g .z-editor-radios .icon-check-circle-thin{color:#19a519}.z-editor-link{color:grey;padding:0 1rem}.z-editor-link li{line-height:2.5rem}.z-editor-link li label{font-size:.875rem}.z-editor-link li input{border-radius:.2rem;height:2rem;margin-left:1rem;padding:0 .5rem;width:20rem}.z-editor-link .wd-btn-group{text-align:right}.z-editor-link .wd-btn-group button{border-radius:.3rem;color:#fff;cursor:pointer;margin-left:.5rem;padding:.2rem .5rem}.r .z-editor-link button:first-child{border:1px solid #fa6464;color:#fa6464}.r .z-editor-link button:last-child{background-color:#fa6464}.p .z-editor-link button:first-child{border:1px solid #00c;color:#00c}.p .z-editor-link button:last-child{background-color:#00c}.b .z-editor-link button:first-child{border:1px solid #3b86cc;color:#3b86cc}.b .z-editor-link button:last-child{background-color:#3b86cc}.g .z-editor-link button:first-child{border:1px solid #19a519;color:#19a519}.g .z-editor-link button:last-child{background-color:#19a519}.z-editor-table{color:grey;padding:0 1rem}.z-editor-table li{line-height:2rem}.z-editor-table li label{font-size:.875rem}.z-editor-table li input{border-radius:.2rem;height:1.5rem;margin-left:1rem;padding:0 .5rem;width:4rem}.z-editor-table .wd-btn-group{margin-top:.5rem;text-align:center}.z-editor-table .wd-btn-group button{border-radius:.3rem;color:#fff;cursor:pointer;margin-left:.5rem;padding:.2rem .5rem}.r .z-editor-table button:first-child{border:1px solid #fa6464;color:#fa6464}.r .z-editor-table button:last-child{background-color:#fa6464}.p .z-editor-table button:first-child{border:1px solid #00c;color:#00c}.p .z-editor-table button:last-child{background-color:#00c}.b .z-editor-table button:first-child{border:1px solid #3b86cc;color:#3b86cc}.b .z-editor-table button:last-child{background-color:#3b86cc}.g .z-editor-table button:first-child{border:1px solid #19a519;color:#19a519}.g .z-editor-table button:last-child{background-color:#19a519}.z-editor-annex{color:grey;padding:0 1rem}.z-editor-annex .wd-edit-file{display:none}.z-editor-annex li{line-height:2.5rem}.z-editor-annex li>label{display:inline-block;font-size:.875rem}.z-editor-annex li input{border-radius:.2rem;height:2rem;margin-left:1rem;padding:0 .5rem;width:17rem}.z-editor-annex .wd-radio-group-type{margin-left:1rem}.z-editor-annex .wd-radio-group-type label{margin-right:1.5rem}.z-editor-annex .wd-radio-group-type label::nth-child(3){margin-right:none}.z-editor-annex .wd-upload-local,.z-editor-annex .wd-use-link-confirm{border-radius:.3rem;color:#fff;cursor:pointer;font-weight:700;line-height:2.2rem;width:100%}.z-editor-annex .wd-upload-local{vertical-align:middle}.z-editor-annex .wd-upload-local .z-editor-icomoon{font-size:1rem;line-height:2.2rem}.z-editor-annex .wd-use-link-confirm{margin:.5rem 0}.r .z-editor-annex .wd-upload-local{background-color:#ef6ea8}.r .z-editor-annex .wd-use-link-confirm{background-color:#fa6464}.p .z-editor-annex .wd-upload-local{background-color:#5a06f5}.p .z-editor-annex .wd-use-link-confirm{background-color:#00c}.b .z-editor-annex .wd-upload-local{background-color:#00aeef}.b .z-editor-annex .wd-use-link-confirm{background-color:#3b86cc}.g .z-editor-annex .wd-upload-local{background-color:#0ebd0e}.g .z-editor-annex .wd-use-link-confirm{background-color:#19a519}.z-editor{background-color:#fff;text-align:left}.z-editor .fn-clearfix:after{clear:both;content:\"\";display:block;height:0;width:0}.z-editor .wd-editor-bar{border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;font-size:.875rem;padding:.5rem 0 0}.z-editor .wd-edit-link-box{float:left;position:relative}.z-editor .wd-edit-link{border-radius:.2rem;cursor:pointer;display:inline-block;height:1.7rem;line-height:1.7rem;padding:0 .5rem;position:relative;text-align:center}.z-editor .wd-edit-link:hover{background-color:#e6e6e6}.z-editor .wd-edit-link:hover:before{border:.2rem solid transparent;border-bottom-color:#222;content:\"\";top:1.6rem}.z-editor .wd-edit-link:hover:after,.z-editor .wd-edit-link:hover:before{display:block;left:50%;opacity:.8;position:absolute;transform:translateX(-50%);z-index:1}.z-editor .wd-edit-link:hover:after{background-color:#222;border-radius:.3rem;color:#fff;content:attr(data-tip);font-size:.75rem;padding:0 .4rem;top:2rem;white-space:nowrap}.z-editor .wd-edit-link .z-editor-icomoon{font-size:.875rem}.z-editor .fontName .wd-edit-link{text-align:left;width:6.2rem}.z-editor .fontName .wd-edit-link .icon-caret-down{display:inline-block;line-height:1.7rem;position:absolute;right:.6rem}.z-editor .fontSize .wd-edit-link{width:6rem}.z-editor .formatBlock .wd-edit-link{width:3rem}.z-editor .wd-edit-link-active{background-color:#e6e6e6}.z-editor .backColor i,.z-editor .fontSize i,.z-editor .foreColor i,.z-editor .formatBlock i{margin-left:.5rem}.z-editor .wd-code-list,.z-editor .wd-font-name-list,.z-editor .wd-font-size-list,.z-editor .wd-format-block-list{background-color:#222;border-radius:.3rem;color:#fff;position:absolute;top:1.6rem;z-index:4}.z-editor .wd-code-list a,.z-editor .wd-font-name-list a,.z-editor .wd-font-size-list a,.z-editor .wd-format-block-list a{border-radius:.3rem;color:#fff;display:inline-block;padding:.2rem .5rem;width:100%}.z-editor .wd-code-list a:hover,.z-editor .wd-font-name-list a:hover,.z-editor .wd-font-size-list a:hover,.z-editor .wd-format-block-list a:hover{background-color:#444}.z-editor .wd-color-list{background-color:#fff;border:1px solid #f4f4f4;border-radius:.3rem;padding:.3rem;position:absolute;top:1.6rem;width:16.8rem;z-index:4}.z-editor .wd-color-list .wd-tr{height:1.6rem}.z-editor .wd-color-list .wd-td{float:left;height:1.2rem;margin:.2rem;position:relative;width:1.2rem}.z-editor .wd-color-list a{border-radius:.1rem;display:block;left:0;padding:.6rem;position:absolute;top:0}.z-editor .wd-color-list a:hover{left:-.1rem;padding:.7rem;top:-.1rem}.z-editor .wd-font-name-list{width:8rem}.z-editor .wd-font-size-list{width:10rem}.z-editor .wd-format-block-list{width:3rem}.z-editor .wd-code-list{width:6rem}.z-editor .backColor .icon-pencil,.z-editor .foreColor .icon-font-color{border-bottom:2px solid transparent;display:inline-block}.z-editor .wd-deitor-content{font-family:Microsoft Yahei;font-size:.75rem;max-height:15rem;min-height:8rem;outline:none;overflow:auto;padding:.6rem}.z-editor .wd-deitor-content font[size=\"3\"]{font-size:.75rem!important}.z-editor .wd-deitor-content div,.z-editor .wd-deitor-content p{word-break:break-all}.z-editor .wd-deitor-content ol,.z-editor .wd-deitor-content ul{list-style-position:inside}.z-editor .wd-deitor-content ul li{list-style-type:disc}.z-editor .wd-deitor-content ol li{list-style-type:decimal}.z-editor .wd-deitor-content a{text-decoration:underline}.z-editor .wd-deitor-content table{width:100%}.z-editor .wd-deitor-content td{border:1px solid grey;min-width:4rem;padding:.5rem;word-break:break-all;word-wrap:break-word}.z-editor .wd-deitor-content pre{border-radius:.3rem;overflow:auto;padding:.5rem .2rem;white-space:pre}.z-editor .wd-edit-footer{padding:.5rem}.z-editor .wd-edit-footer-btn{float:right}.z-editor .wd-edit-footer-btn button{border-radius:.3rem;color:#fff;line-height:1.5rem;padding:0 .5rem}.r .z-editor .wd-code-list a:hover,.r .z-editor .wd-font-name-list a:hover,.r .z-editor .wd-font-size-list a:hover,.r .z-editor .wd-format-block-list a:hover{color:#ef6ea8}.r .z-editor .wd-deitor-content a{color:#fa6464}.r .z-editor .wd-deitor-content pre{background-color:#f1e9e9;color:#ef6ea8}.r .z-editor .wd-edit-footer-btn button{background-color:#ef6ea8}.p .z-editor .wd-code-list a:hover,.p .z-editor .wd-font-name-list a:hover,.p .z-editor .wd-font-size-list a:hover,.p .z-editor .wd-format-block-list a:hover{color:#5a06f5}.p .z-editor .wd-deitor-content a{color:#00c}.p .z-editor .wd-deitor-content pre{background-color:#e6ebf3;color:#5a06f5}.p .z-editor .wd-edit-footer-btn button{background-color:#5a06f5}.b .z-editor .wd-code-list a:hover,.b .z-editor .wd-font-name-list a:hover,.b .z-editor .wd-font-size-list a:hover,.b .z-editor .wd-format-block-list a:hover{color:#00aeef}.b .z-editor .wd-deitor-content a{color:#3b86cc}.b .z-editor .wd-deitor-content pre{background-color:#e2f0f3;color:#00aeef}.b .z-editor .wd-edit-footer-btn button{background-color:#00aeef}.g .z-editor .wd-code-list a:hover,.g .z-editor .wd-font-name-list a:hover,.g .z-editor .wd-font-size-list a:hover,.g .z-editor .wd-format-block-list a:hover{color:#0ebd0e}.g .z-editor .wd-deitor-content a{color:#19a519}.g .z-editor .wd-deitor-content pre{background-color:#e0f3e8;color:#0ebd0e}.g .z-editor .wd-edit-footer-btn button{background-color:#0ebd0e}"]
+                    styles: ["@charset \"UTF-8\";a,a:after,a:before,audio,div,div:after,div:before,h1,h2,h3,h4,h5,h6,i,i:after,i:before,img,li,li:after,li:before,ol,p,pre,span,span:after,span:before,table,ul,video{-moz-box-sizing:border-box;-ms-box-sizing:border-box;-o-box-sizing:border-box;-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}h1,h2,h3,h4,h5,h6{font-weight:400}em,i{font-style:italic}table{border-collapse:collapse;border-spacing:0}img{border:none;height:auto;vertical-align:middle;width:100%}a:active,a:hover,a:link,a:visited{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;color:#000;cursor:pointer;text-decoration:none;user-select:none}hr{background-color:#e1e1e1;border:0;color:#000;height:1PX;margin:0;*margin:0}li,ul{list-style-type:none}button,input[type=button],input[type=reset],input[type=submit]{-moz-appearance:button;-ms-appearance:button;-o-appearance:button;-webkit-appearance:button;appearance:button;border:none}button,button:focus,input,input:focus{background-color:#fff;outline:none;outline-style:none}input{border:1px solid #e6e6e6}::-ms-clear,::-ms-reveal{display:none}input:-ms-clear,input:-ms-reveal{display:none}[tappable]{-ms-touch-action:manipulation;cursor:pointer;touch-action:manipulation}.z-editor-icomoon,[class*=\" icon-\"],[class^=icon-]{-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-family:z-editor-icomoon!important;font-size:.75rem;font-style:normal;font-variant:normal;font-weight:400;line-height:.75rem;line-height:1;speak:never;text-transform:none}@font-face{font-display:block;font-family:z-editor-icomoon;font-style:normal;font-weight:400;src:url(\"data:application/font-woff;charset=utf-8;base64,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\") format(\"woff\")}.icon-square-m:before{content:\"\uE911\"}.icon-link:before{content:\"\uF0C1\"}.icon-caret-down:before{content:\"\uF0D7\"}.icon-unlink:before{content:\"\uF127\"}.icon-select_all:before{content:\"\uE904\"}.icon-copy:before{content:\"\uE93A\"}.icon-undo:before{content:\"\uE967\"}.icon-redo:before{content:\"\uE968\"}.icon-clipboard:before{content:\"\uE9E2\"}.icon-list-numbered:before{content:\"\uE9F3\"}.icon-list2:before{content:\"\uE9FC\"}.icon-scissors-bold:before{content:\"\uEA5A\"}.icon-bold:before{content:\"\uEA62\"}.icon-underline:before{content:\"\uEA63\"}.icon-italic:before{content:\"\uEA64\"}.icon-strikethrough:before{content:\"\uEA65\"}.icon-page-break:before{content:\"\uEA68\"}.icon-clear-formatting:before{content:\"\uEA6F\"}.icon-table:before{content:\"\uEA71\"}.icon-paragraph-left:before{content:\"\uEA77\"}.icon-paragraph-center:before{content:\"\uEA78\"}.icon-paragraph-right:before{content:\"\uEA79\"}.icon-paragraph-justify:before{content:\"\uEA7A\"}.icon-indent-increase:before{content:\"\uEA7B\"}.icon-indent-decrease:before{content:\"\uEA7C\"}.icon-embed:before{content:\"\uEA80\"}.icon-arrow-down:before{content:\"\uE90A\"}.icon-database:before{content:\"\uE94C\"}.icon-loader:before{content:\"\uE981\"}.icon-maximize:before{content:\"\uE989\"}.icon-minimize:before{content:\"\uE990\"}.icon-upload-cloud:before{content:\"\uE9E4\"}.icon-x-square:before{content:\"\uE9F9\"}.icon-smile-o:before{content:\"\uF118\"}.icon-font-color:before{content:\"\uF031\"}.icon-pencil:before{content:\"\uF040\"}.icon-check-circle-thin:before{content:\"\uF058\"}.icon-square-o:before{content:\"\uF096\"}.icon-superscript:before{content:\"\uF12B\"}.icon-subscript:before{content:\"\uF12C\"}.icon-eraser:before{content:\"\uF12D\"}.icon-check-square:before{content:\"\uF14A\"}.icon-circle-thin:before{content:\"\uF1DB\"}.z-editor-alert .wd-content,.z-editor-alert .wd-mask{height:100%;left:0;position:fixed;top:0;width:100%;z-index:99999}.z-editor-alert .wd-content{overflow:auto}#z-editor-tip .wd-tip,#z-editor-tip .wd-tip-for-scale{background-color:#333;border-radius:.3rem;color:#fff;filter:alpha(opacity=70);font-size:.75rem;left:50%;line-height:1;max-width:12rem;opacity:.7;padding:.7rem .8rem;position:fixed;text-align:center;z-index:9999999}#z-editor-tip .wd-tip{transform:translateX(-50%)}#z-editor-tip .trans1-enter{top:100%}#z-editor-tip .trans1-active{top:40%}#z-editor-tip .trans1-leave{top:100%}#z-editor-tip .trans2-enter{top:-100%}#z-editor-tip .trans2-active{top:40%}#z-editor-tip .trans2-leave{top:-100%}#z-editor-tip .scale-enter{filter:alpha(opacity=0);opacity:0;top:50%;transform:translate(-50%,-50%) scale(0)}#z-editor-tip .scale-active{filter:alpha(opacity=70);opacity:.7;top:50%;transform:translate(-50%,-50%) scale(1)}#z-editor-tip .scale-leave{filter:alpha(opacity=0);opacity:0;top:50%;transform:translate(-50%,-50%) scale(0)}#z-editor-tip .icon-loader{-webkit-animation:myloading 1s infinite forwards;animation:myloading 1s infinite forwards;display:inline-block}@-webkit-keyframes myloading{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}@keyframes myloading{0%{transform:rotate(0deg)}to{transform:rotate(1turn)}}#z-editor-window .wd-mask{background-color:#3a3434;filter:alpha(opacity=20);opacity:.2}#z-editor-window .wd-window{background-color:#fff;border-radius:.3rem;position:absolute;z-index:99999}#z-editor-window .wd-window-tool{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;background-color:#f4f4f4;border-radius:.3rem .3rem 0 0;cursor:pointer;line-height:2rem;user-select:none}#z-editor-window .wd-window-tool h3{float:left;font-size:1rem;padding-left:.7rem}#z-editor-window .wd-window-tool p{float:right;padding-right:.7rem}#z-editor-window .wd-window-tool .z-editor-icomoon{cursor:pointer;font-size:1rem;line-height:2rem}#z-editor-window .wd-window-tool:after{clear:both;content:\"\";display:block}#z-editor-window .wd-window-pannel{overflow:auto;padding:.7rem}#z-editor-window .trans1-enter{top:100%}#z-editor-window .trans1-active{top:20%}#z-editor-window .trans1-leave{top:100%}#z-editor-window .trans2-enter{top:-100%}#z-editor-window .trans2-active{top:20%}#z-editor-window .trans2-leave{top:-100%}#z-editor-window .scale-enter{filter:alpha(opacity=0);opacity:0;top:20%;transform:scale(0)}#z-editor-window .scale-active{filter:alpha(opacity=100);opacity:1;top:20%;transform:scale(1)}#z-editor-window .scale-leave{filter:alpha(opacity=0);opacity:0;top:20%;transform:scale(0)}.z-editor-checkbox{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none;width:1rem}.z-editor-checkbox input{display:none}.z-editor-checkbox .z-editor-icomoon{cursor:pointer;font-size:1rem;vertical-align:middle}.z-editor-checkbox .wd-checkbox-disabled{cursor:not-allowed;opacity:.8}.r .z-editor-checkbox .icon-check-square{color:#fa6464}.p .z-editor-checkbox .icon-check-square{color:#00c}.b .z-editor-checkbox .icon-check-square{color:#3b86cc}.g .z-editor-checkbox .icon-check-square{color:#19a519}.z-editor-radios{-moz-user-select:none;-ms-user-select:none;-webkit-user-select:none;user-select:none}.z-editor-radios .input-radio{display:none}.z-editor-radios .z-editor-icomoon{cursor:pointer;font-size:1rem}.z-editor-radios .z-editor-icomoon,.z-editor-radios span{line-height:1;vertical-align:middle}.z-editor-radios .wd-radio-disabled{cursor:not-allowed;opacity:.8}.r .z-editor-radios .icon-check-circle-thin{color:#fa6464}.p .z-editor-radios .icon-check-circle-thin{color:#00c}.b .z-editor-radios .icon-check-circle-thin{color:#3b86cc}.g .z-editor-radios .icon-check-circle-thin{color:#19a519}.z-editor-link{color:grey;padding:0 1rem}.z-editor-link li{line-height:2.5rem}.z-editor-link li label{font-size:.875rem}.z-editor-link li input{border-radius:.2rem;height:2rem;margin-left:1rem;padding:0 .5rem;width:20rem}.z-editor-link .wd-btn-group{text-align:right}.z-editor-link .wd-btn-group button{border-radius:.3rem;color:#fff;cursor:pointer;margin-left:.5rem;padding:.2rem .5rem}.r .z-editor-link button:first-child{border:1px solid #fa6464;color:#fa6464}.r .z-editor-link button:last-child{background-color:#fa6464}.p .z-editor-link button:first-child{border:1px solid #00c;color:#00c}.p .z-editor-link button:last-child{background-color:#00c}.b .z-editor-link button:first-child{border:1px solid #3b86cc;color:#3b86cc}.b .z-editor-link button:last-child{background-color:#3b86cc}.g .z-editor-link button:first-child{border:1px solid #19a519;color:#19a519}.g .z-editor-link button:last-child{background-color:#19a519}.z-editor-table{color:grey;padding:0 1rem}.z-editor-table li{line-height:2rem}.z-editor-table li label{font-size:.875rem}.z-editor-table li input{border-radius:.2rem;height:1.5rem;margin-left:1rem;padding:0 .5rem;width:4rem}.z-editor-table .wd-btn-group{margin-top:.5rem;text-align:center}.z-editor-table .wd-btn-group button{border-radius:.3rem;color:#fff;cursor:pointer;margin-left:.5rem;padding:.2rem .5rem}.r .z-editor-table button:first-child{border:1px solid #fa6464;color:#fa6464}.r .z-editor-table button:last-child{background-color:#fa6464}.p .z-editor-table button:first-child{border:1px solid #00c;color:#00c}.p .z-editor-table button:last-child{background-color:#00c}.b .z-editor-table button:first-child{border:1px solid #3b86cc;color:#3b86cc}.b .z-editor-table button:last-child{background-color:#3b86cc}.g .z-editor-table button:first-child{border:1px solid #19a519;color:#19a519}.g .z-editor-table button:last-child{background-color:#19a519}.z-editor-annex{color:grey;padding:0 1rem}.z-editor-annex .wd-edit-file{display:none}.z-editor-annex li{line-height:2.5rem}.z-editor-annex li>label{display:inline-block;font-size:.875rem}.z-editor-annex li input{border-radius:.2rem;height:2rem;margin-left:1rem;padding:0 .5rem;width:17rem}.z-editor-annex .wd-radio-group-type{margin-left:1rem}.z-editor-annex .wd-radio-group-type label{margin-right:1.5rem}.z-editor-annex .wd-radio-group-type label::nth-child(3){margin-right:none}.z-editor-annex .wd-upload-local,.z-editor-annex .wd-use-link-confirm{border-radius:.3rem;color:#fff;cursor:pointer;font-weight:700;line-height:2.2rem;width:100%}.z-editor-annex .wd-upload-local{vertical-align:middle}.z-editor-annex .wd-upload-local .z-editor-icomoon{font-size:1rem;line-height:2.2rem}.z-editor-annex .wd-use-link-confirm{margin:.5rem 0}.r .z-editor-annex .wd-upload-local{background-color:#ef6ea8}.r .z-editor-annex .wd-use-link-confirm{background-color:#fa6464}.p .z-editor-annex .wd-upload-local{background-color:#5a06f5}.p .z-editor-annex .wd-use-link-confirm{background-color:#00c}.b .z-editor-annex .wd-upload-local{background-color:#00aeef}.b .z-editor-annex .wd-use-link-confirm{background-color:#3b86cc}.g .z-editor-annex .wd-upload-local{background-color:#0ebd0e}.g .z-editor-annex .wd-use-link-confirm{background-color:#19a519}.z-editor{background-color:#fff;text-align:left}.z-editor .fn-clearfix:after{clear:both;content:\"\";display:block;height:0;width:0}.z-editor .wd-editor-bar{border-bottom:1px solid #e6e6e6;border-top:1px solid #e6e6e6;font-size:.875rem;padding:.5rem 0 0}.z-editor .wd-edit-link-box{float:left;position:relative}.z-editor .wd-edit-link{border-radius:.2rem;cursor:pointer;display:inline-block;height:1.7rem;line-height:1.7rem;padding:0 .5rem;position:relative;text-align:center}.z-editor .wd-edit-link:hover{background-color:#e6e6e6}.z-editor .wd-edit-link:hover:before{border:.2rem solid transparent;border-bottom-color:#222;content:\"\";top:1.6rem}.z-editor .wd-edit-link:hover:after,.z-editor .wd-edit-link:hover:before{display:block;left:50%;opacity:.8;position:absolute;transform:translateX(-50%);z-index:1}.z-editor .wd-edit-link:hover:after{background-color:#222;border-radius:.3rem;color:#fff;content:attr(data-tip);font-size:.75rem;padding:0 .4rem;top:2rem;white-space:nowrap}.z-editor .wd-edit-link .z-editor-icomoon{font-size:.875rem}.z-editor .fontName .wd-edit-link,.z-editor .fontSize .wd-edit-link{text-align:left;width:6.2rem}.z-editor .fontName .wd-edit-link i,.z-editor .fontSize .wd-edit-link i{display:inline-block;line-height:1.7rem;position:absolute;right:.6rem}.z-editor .fontSize .wd-edit-link{width:6rem}.z-editor .formatBlock .wd-edit-link{width:4rem}.z-editor .wd-edit-link-active{background-color:#e6e6e6}.z-editor .backColor i,.z-editor .fontSize i,.z-editor .foreColor i,.z-editor .formatBlock i{margin-left:.5rem}.z-editor .wd-code-list,.z-editor .wd-font-name-list,.z-editor .wd-font-size-list,.z-editor .wd-format-block-list{background-color:#222;border-radius:.3rem;color:#fff;position:absolute;top:1.6rem;z-index:4}.z-editor .wd-code-list a,.z-editor .wd-font-name-list a,.z-editor .wd-font-size-list a,.z-editor .wd-format-block-list a{border-radius:.3rem;color:#fff;display:inline-block;padding:.2rem .5rem;width:100%}.z-editor .wd-code-list a:hover,.z-editor .wd-font-name-list a:hover,.z-editor .wd-font-size-list a:hover,.z-editor .wd-format-block-list a:hover{background-color:#444}.z-editor .wd-color-list{background-color:#fff;border:1px solid #f4f4f4;border-radius:.3rem;padding:.3rem;position:absolute;top:1.6rem;width:16.8rem;z-index:4}.z-editor .wd-color-list .wd-tr{height:1.6rem}.z-editor .wd-color-list .wd-td{float:left;height:1.2rem;margin:.2rem;position:relative;width:1.2rem}.z-editor .wd-color-list a{border-radius:.1rem;display:block;left:0;padding:.6rem;position:absolute;top:0}.z-editor .wd-color-list a:hover{left:-.1rem;padding:.7rem;top:-.1rem}.z-editor .wd-font-name-list{width:6.2rem}.z-editor .wd-font-size-list{width:6rem}.z-editor .wd-format-block-list{width:4rem}.z-editor .wd-code-list{width:6rem}.z-editor .backColor .icon-pencil,.z-editor .foreColor .icon-font-color{border-bottom:2px solid transparent;display:inline-block}.z-editor .wd-deitor-content{font-family:Microsoft Yahei;max-height:15rem;min-height:8rem;outline:none;overflow:auto;padding:.6rem}.z-editor .wd-deitor-content div,.z-editor .wd-deitor-content p{word-break:break-all}.z-editor .wd-deitor-content ol,.z-editor .wd-deitor-content ul{list-style-position:inside}.z-editor .wd-deitor-content ul li{list-style-type:disc}.z-editor .wd-deitor-content ol li{list-style-type:decimal}.z-editor .wd-deitor-content a{text-decoration:underline}.z-editor .wd-deitor-content table{width:100%}.z-editor .wd-deitor-content td{border:1px solid grey;min-width:4rem;padding:.5rem;word-break:break-all;word-wrap:break-word}.z-editor .wd-deitor-content pre{border-radius:.3rem;overflow:auto;padding:.5rem .2rem;white-space:pre}.z-editor .wd-edit-footer{padding:.5rem}.z-editor .wd-edit-footer-btn{float:right}.z-editor .wd-edit-footer-btn button{border-radius:.3rem;color:#fff;line-height:1.5rem;padding:0 .5rem}.z-editor .active{background-color:#e6e6e6}.z-editor .disabled{cursor:not-allowed;opacity:.5}.z-editor .disabled:hover{background-color:transparent}.z-editor .disabled:hover:after,.z-editor .disabled:hover:before{content:none}.r .z-editor .wd-code-list a:hover,.r .z-editor .wd-font-name-list a:hover,.r .z-editor .wd-font-size-list a:hover,.r .z-editor .wd-format-block-list a:hover{color:#ef6ea8}.r .z-editor .wd-deitor-content pre{background-color:#f1e9e9;color:#ef6ea8}.r .z-editor .wd-edit-footer-btn button{background-color:#ef6ea8}.p .z-editor .wd-code-list a:hover,.p .z-editor .wd-font-name-list a:hover,.p .z-editor .wd-font-size-list a:hover,.p .z-editor .wd-format-block-list a:hover{color:#5a06f5}.p .z-editor .wd-deitor-content pre{background-color:#e6ebf3;color:#5a06f5}.p .z-editor .wd-edit-footer-btn button{background-color:#5a06f5}.b .z-editor .wd-code-list a:hover,.b .z-editor .wd-font-name-list a:hover,.b .z-editor .wd-font-size-list a:hover,.b .z-editor .wd-format-block-list a:hover{color:#00aeef}.b .z-editor .wd-deitor-content pre{background-color:#e2f0f3;color:#00aeef}.b .z-editor .wd-edit-footer-btn button{background-color:#00aeef}.g .z-editor .wd-code-list a:hover,.g .z-editor .wd-font-name-list a:hover,.g .z-editor .wd-font-size-list a:hover,.g .z-editor .wd-format-block-list a:hover{color:#0ebd0e}.g .z-editor .wd-deitor-content pre{background-color:#e0f3e8;color:#0ebd0e}.g .z-editor .wd-edit-footer-btn button{background-color:#0ebd0e}"]
                 }] }
     ];
     /** @nocollapse */
@@ -3294,6 +3581,31 @@
          */
         AppZeditorComponent.prototype.switchCodePannel;
         /**
+         * 是否加粗
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.isBold;
+        /**
+         * 是否斜体
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.isItalic;
+        /**
+         * 是否下划线
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.isUnderline;
+        /**
+         * 是否删除线
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.isStrikeThrough;
+        /**
+         * 默认无上下标
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.scriptActive;
+        /**
          * 默认左对齐
          * @type {?}
          */
@@ -3318,6 +3630,11 @@
          * @type {?}
          */
         AppZeditorComponent.prototype.parent;
+        /**
+         * 是否在代码区, 默认false
+         * @type {?}
+         */
+        AppZeditorComponent.prototype.inCode;
         /** @type {?} */
         AppZeditorComponent.prototype.onChange;
         /** @type {?} */

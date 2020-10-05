@@ -35,13 +35,15 @@ export default class CursorUtil {
      */
     static getSelection(elem?: HTMLElement): Selection | TextRange {
         let selection;
+        // tslint:disable-next-line: curly
         if (elem && document.activeElement !== elem) elem.focus();
         if (window.getSelection) {
             selection = window.getSelection();
         } else if (document.getSelection) {
             selection = document.getSelection();
         } else {
-            selection = (<any>document).selection.createRange();
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            selection = (<any> document).body.createRange();
         }
         return selection;
     }
@@ -54,13 +56,17 @@ export default class CursorUtil {
     static setFirstRange(range: Range | TextRange) {
         const selection = this.getSelection();
         // 新标准
-        if ((<any>selection).addRange) {
-            (<Selection>selection).removeAllRanges();
-            (<Selection>selection).addRange(<Range>range);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<any> selection).addRange) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Selection> selection).removeAllRanges();
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Selection> selection).addRange(<Range> range);
             return;
         }
         // 旧标准
-        (<TextRange>selection) = <TextRange>range;
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> selection) = <TextRange> range;
     }
 
     /**
@@ -71,61 +77,33 @@ export default class CursorUtil {
      */
     static getRange(index: number, elem?: HTMLElement): Range | TextRange {
         const selection = this.getSelection(elem);
-        if ((<Selection>selection).getRangeAt && (<Selection>selection).rangeCount) { // 新标准
-            return (<Selection>selection).getRangeAt(index);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<Selection> selection).getRangeAt && (<Selection> selection).rangeCount) { // 新标准
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            return (<Selection> selection).getRangeAt(index);
         } else { // 旧标准
-            return (<TextRange>selection);
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            return (<TextRange> selection);
         }
     }
 
     /**
      * 选中元素elem的内容
-     * @param  elem
      */
     static selectSelectionElementChilds(elem: HTMLElement) {
+        // tslint:disable-next-line: curly
         if (!elem) return;
         const selection = this.getSelection();
-        if ((<any>selection).selectAllChildren) {
-            (<Selection>selection).selectAllChildren(elem);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<any> selection).selectAllChildren) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Selection> selection).selectAllChildren(elem);
             return;
         }
-        (<TextRange>selection).moveToElementText(elem);
-        (<TextRange>selection).select();
-    }
-
-    /**
-     * 选中元素elem的内容
-     * @param  elem
-     * @param index ? 默认0 range下标
-     */
-    static selectRangeElementChilds(elem: HTMLElement, index: number = 0) {
-        if (!elem) return;
-        const range = this.getRange(index);
-        if ((<any>range).selectNodeContents) {
-            (<Range>range).selectNodeContents(elem);
-            return;
-        }
-        (<TextRange>range).moveToElementText(elem);
-        (<TextRange>range).select();
-    }
-
-    /**
-     * 将范围设置到元素并折叠
-     * @param  elem 元素，该元素可以是不可聚焦的元素
-     * @param isStart 是否折叠到开头
-     * @param index ? 默认0 range下标
-     */
-    static setRangeToElement(elem: HTMLElement, isStart: boolean, index: number = 0) {
-        this.selectRangeElementChilds(elem, index);
-        const range = this.getRange(index);
-        // 新标准
-        if ((<any>range).selectNodeContents) {
-            (<Range>range).collapse(isStart);
-            return;
-        }
-        // 旧标准
-        (<TextRange>range).collapse(!isStart);
-        (<TextRange>range).select();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> selection).moveToElementText(elem);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> selection).select();
     }
 
     /**
@@ -137,26 +115,33 @@ export default class CursorUtil {
         this.selectSelectionElementChilds(elem);
         const selection = this.getSelection();
         // 新标准
-        if (isStart && (<any>selection).collapseToStart) {
-            (<Selection>selection).collapseToStart();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if (isStart && (<any> selection).collapseToStart) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Selection> selection).collapseToStart();
             return;
         }
-        if (!isStart && (<any>selection).collapseToEnd) {
-            (<Selection>selection).collapseToEnd();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if (!isStart && (<any> selection).collapseToEnd) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Selection> selection).collapseToEnd();
             return;
         }
         // 旧标准
-        (<TextRange>selection).collapse(!isStart);
-        (<TextRange>selection).select();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> selection).collapse(!isStart);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> selection).select();
     }
 
-    /** 
+    /**
      * 获取选区的选中的文本
      * @returns string 选区文本
      */
     static getSelectionText(): string {
         const selection = this.getSelection();
-        return (<Selection>selection).toString() || (<TextRange>selection).text;
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        return (<Selection> selection).toString() || (<TextRange> selection).text;
     }
     /**
      * 获取下标为index的范围文本
@@ -165,56 +150,10 @@ export default class CursorUtil {
      */
     static getRangeText(index: number = 0): string {
         const range = this.getRange(index);
-        return (<Range>range).toString() || (<TextRange>range).text;
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        return (<Range> range).toString() || (<TextRange> range).text;
     }
 
-    /**
-     * 设置range的起始和结束位置相对于各自的容器的偏移量
-     * @param  s 起始偏移
-     * @param  e 尾部偏移
-     * @param  index？默认0， 范围下标，旧标准就一个
-     */
-    static setRangeOffset(s: number, e: number, index: number = 0) {
-        let range = this.getRange(index);
-        if ((<any>range).setEnd) {
-            range = <Range>range;
-            range.setStart(range.startContainer, s);
-            range.setEnd(range.endContainer, e);
-            return;
-        }
-        // 重置TextRange到头部
-        (<TextRange>range).collapse(false);
-        (<TextRange>range).select();
-        (<TextRange>range).moveEnd('charactor', e);
-        (<TextRange>range).moveStart('charactor', e);
-        (<TextRange>range).select();
-    }
-
-    /**
-     * 设置选区的起始和结束位置相对于各自的容器的偏移量
-     * @param  s 起始位置偏移量
-     * @param  e? 结束位置偏移量
-     */
-    static setSelectionOffset(s: number, e?: number) {
-        if (e === void 0) {
-            e = s;
-        }
-        let selection = this.getSelection();
-        if ((<any>selection).setBaseAndExtent) {
-            selection = <Selection>selection;
-            if (!selection.anchorNode || !selection.focusNode) {
-                return;
-            }
-            selection.setBaseAndExtent(selection.anchorNode, s, selection.focusNode, e);
-            return;
-        }
-        // 重置TextRange到头部
-        (<TextRange>selection).collapse(false);
-        (<TextRange>selection).select();
-        (<TextRange>selection).moveEnd('charactor', e);
-        (<TextRange>selection).moveStart('charactor', e);
-        (<TextRange>selection).select();
-    }
     /**
      * 获取range起始位置和结束位置的最浅的父元素
      * 
@@ -224,10 +163,13 @@ export default class CursorUtil {
      */
     static getRangeCommonParent(index: number = 0): Node {
         const range = this.getRange(index);
-        if ((<any>range).commonAncestorContainer) {
-            return (<Range>range).commonAncestorContainer;
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<any> range).commonAncestorContainer) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            return (<Range> range).commonAncestorContainer;
         }
-        return (<TextRange>range).parentElement();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        return (<TextRange> range).parentElement();
     }
 
     /**
@@ -236,12 +178,16 @@ export default class CursorUtil {
      */
     static deleteRangeContent(index: number = 0) {
         const range = this.getRange(index);
-        if ((<any>range).deleteContents) {
-            (<Range>range).deleteContents();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<any> range).deleteContents) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Range> range).deleteContents();
             return;
         }
-        (<TextRange>range).pasteHTML('');
-        (<TextRange>range).select();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> range).pasteHTML('');
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> range).select();
     }
 
     /**
@@ -252,11 +198,15 @@ export default class CursorUtil {
     static insertNode(node: Node, index: number = 0) {
         this.deleteRangeContent(index);
         const range = this.getRange(index);
-        if ((<any>range).insertNode) {
-            (<Range>range).insertNode(node);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        if ((<any> range).insertNode) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            (<Range> range).insertNode(node);
             return;
         }
-        (<TextRange>range).pasteHTML((<HTMLElement>node).outerHTML);
-        (<TextRange>range).select();
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> range).pasteHTML((<HTMLElement> node).outerHTML);
+        // tslint:disable-next-line: no-angle-bracket-type-assertion
+        (<TextRange> range).select();
     }
 }
