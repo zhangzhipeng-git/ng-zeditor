@@ -26,7 +26,7 @@ export class UIAnnexComponent {
     static VIDEOARR = ['video/mp4', 'video/ogg', 'video/webm'];
     url = 'https://';
     width = '100%';
-    height = '200px';
+    height = 'auto';
     /** 获取类型对应的名称 */
     typeName = '图片';
     /** 重渲染input file */
@@ -54,7 +54,7 @@ export class UIAnnexComponent {
      */
     selectFile() {
         // 需要先设置宽度和高度
-        const num = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?$/i;
+        const num = /^[1-9]\d{1,3}(px|rem|em|vw|vh|%)?|auto|inherit|unset$/i;
         if (!num.test(this.width + '') || !num.test(this.height + '')) {
             this.domService.tost({
                 text: `上传${this.typeName}前请填写合适的高度和宽度~`
@@ -193,9 +193,7 @@ export class UIAnnexComponent {
      */
     getImageHTML(src: string) {
         return (
-            '<p style="height:' +
-            this.height +
-            ';">' +
+            '<p>' +
             '<img src="' +
             src +
             '" style="height:' +
@@ -203,7 +201,7 @@ export class UIAnnexComponent {
             ';width:' +
             this.width +
             ';object-fit:cover;" />' +
-            '</p><br/>'
+            '</p><p><br/></p>'
         );
     }
     /**
@@ -213,12 +211,12 @@ export class UIAnnexComponent {
     getAudioHTML(src: string) {
         const arr = UIAnnexComponent.AUDIOARR;
         // tslint:disable-next-line: max-line-length
-        let html = '<p style="text-align:center;height:' + this.height + ';"><audio controls style="display:inline-block;height:' + '100%' + ';width:' + this.width + ';">';
+        let html = '<p><audio controls style="display:inline-block;height:' + this.height + ';width:' + this.width + ';">';
         for (let i = 0, len = arr.length; i < len; i++) {
             html += '<source src="' + src + '" type="' + arr[i] + '">';
         }
         html += '您的浏览器不支持Audio标签。';
-        html += '</audio>&#8205;&zwj;</p><br/>';
+        html += '</audio>&#8205;&zwj;</p><p><br/></p>';
         return html;
     }
 
@@ -228,12 +226,12 @@ export class UIAnnexComponent {
     getVideoHTML(src: string) {
         const arr = UIAnnexComponent.VIDEOARR;
         // tslint:disable-next-line: max-line-length
-        let html = '<p style="text-align:center;height:' + this.height + ';"><video controls style="display:inline-block;height:' + '100%' + ';width:' + this.width + ';">';
+        let html = '<p><video controls style="display:inline-block;height:' + this.height + ';width:' + this.width + ';">';
         for (let i = 0, len = arr.length; i < len; i++) {
             html += '<source src="' + src + '" type="' + arr[i] + '">';
         }
         html += '您的浏览器不支持Video标签。';
-        html += '</video>&#8205;&zwj;</p><br/>';
+        html += '</video>&#8205;&zwj;</p><p><br/></p>';
         return html;
     }
 

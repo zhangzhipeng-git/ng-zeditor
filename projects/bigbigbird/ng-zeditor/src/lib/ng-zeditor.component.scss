@@ -257,6 +257,9 @@
             border-radius: 0.3rem;
             overflow: auto;
             white-space: pre;
+            // pointer-events:none 禁用ie中pre标签的resize和drag事件，但无法阻止输入时的这两个事件
+            // 即使阻止resize和dargstart事件也不生效。。。
+            pointer-events:none;
         }
     }
     // 编辑脚部

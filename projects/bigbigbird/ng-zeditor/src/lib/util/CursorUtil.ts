@@ -161,7 +161,7 @@ export default class CursorUtil {
      * @param  index? 可选，默认第一个，旧标准就1个
      * @returns Node
      */
-    static getRangeCommonParent(index: number = 0): Node {
+    static getRangeCommonParent(index: number = 0): Node | undefined {
         const range = this.getRange(index);
         // tslint:disable-next-line: no-angle-bracket-type-assertion
         if ((<any> range).commonAncestorContainer) {
@@ -169,7 +169,10 @@ export default class CursorUtil {
             return (<Range> range).commonAncestorContainer;
         }
         // tslint:disable-next-line: no-angle-bracket-type-assertion
-        return (<TextRange> range).parentElement();
+        if ((<any> range).parentElement) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            return (<TextRange> range).parentElement();
+        }
     }
 
     /**

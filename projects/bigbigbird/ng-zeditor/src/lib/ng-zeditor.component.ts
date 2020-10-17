@@ -75,7 +75,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         return this.pannelRef.nativeElement;
     }
     get footer(): HTMLElement {
-        return this.footerRef.nativeElement;
+        return (this.footerRef || {nativeElement: {offsetHeight: 0}}).nativeElement;
     }
     get fontNameEl(): HTMLElement {
         return this.fontNameRef.nativeElement;
@@ -579,9 +579,11 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     /**
      * 获取历史输入
      */
-    history() {
+    history(e: Event) {
+        this.ensureFocus(e);
         this.vhtml = window.localStorage.getItem('editor_input') || '';
         this.autoActive();
+        this.setRangeAndEmitValue(0);
     }
 
     /**
@@ -590,6 +592,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     removeFormat() {
         this.cmd('removeFormat', false);
         this.initFormatData();
+        this.setDefaultFormat();
     }
 
     /**
@@ -691,16 +694,17 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     pannelOnPaste(e: any) {
         setTimeout(() => { this.autoActive(); });
-        if (!this.isRangeInCode()) { return; }
-        // tslint:disable-next-line: no-angle-bracket-type-assertion
-        const obj = <any>CommonUtil.isIE() ? window : e;
-        if (!obj.clipboardData) { return; }
-        const text = obj.clipboardData.getData('text');
-        const df = document.createDocumentFragment();
-        df.appendChild(document.createTextNode(text));
-        CursorUtil.insertNode(df);
-        e.preventDefault();
-        e.returnValue = false;
+        if (!this.isRangeInCode()) {
+            // tslint:disable-next-line: no-angle-bracket-type-assertion
+            const obj = <any> CommonUtil.isIE() ? window : e;
+            if (!obj.clipboardData) { return; }
+            const text = obj.clipboardData.getData('text');
+            const df = document.createDocumentFragment();
+            df.appendChild(document.createTextNode(text));
+            CursorUtil.insertNode(df);
+            e.preventDefault();
+            e.returnValue = false;
+        }
         this.setRangeAndEmitValue(0);
     }
 
@@ -816,15 +820,19 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         }
         // 如果光标周围有内容则不设置默认格式
         const el = CursorUtil.getRangeCommonParent();
-        if (el.nodeType === 3) {
+        if (!el || el.nodeType === 3) {
             return;
         }
         // 如果没有内容，则格式化默认格式
         if (!this.pannel.children || !this.pannel.children.length) {
-            this.cmd('formatBlock', false, this.formatBlock);
-            this.cmd('fontName', false, this.fontFamily.value);
-            this.cmd('fontSize', false, this.fontSize.value);
+            this.setDefaultFormat();
         }
+    }
+
+    setDefaultFormat() {
+        this.cmd('formatBlock', false, this.formatBlock);
+        this.cmd('fontName', false, this.fontFamily.value);
+        this.cmd('fontSize', false, this.fontSize.value);
     }
 
     /**
@@ -841,7 +849,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     private insertHTML(html: string) {
         // tslint:disable-next-line: no-angle-bracket-type-assertion
-        const range = <Range> CursorUtil.getRange(0);
+        const range = <Range>CursorUtil.getRange(0);
         range.deleteContents();
         const df = document.createDocumentFragment();
         let name = 'div';
@@ -896,7 +904,8 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         if (!p) { return; }
         // 如果选取对象的节点是文本节点，则将p变为其父节点
         // tslint:disable-next-line: no-angle-bracket-type-assertion
-        if (p.nodeName === '#text') { p = <HTMLElement> p.parentNode; }
+        if (p.nodeName === '#text') { p = <HTMLElement>p.parentNode; }
+        if (!p) {return; }
         // 段落格式
         this.grandChildTograndParent(p, (e: HTMLElement) => {
             if (e === this.pannel) {

@@ -299,7 +299,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
     /**
      * 获取历史输入
      */
-    history(): void;
+    history(e: Event): void;
     /**
      * 清除格式，不阻止失焦，重新聚焦时会设置历史格式
      */
@@ -358,6 +358,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      * 编辑初始化和设置历史格式
      */
     private initEdit;
+    setDefaultFormat(): void;
     /**
      * 查询是否支持命令
      * @param cmd 命令

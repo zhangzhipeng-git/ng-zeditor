@@ -61,7 +61,7 @@ export default class CursorUtil {
      * @param  index? 可选，默认第一个，旧标准就1个
      * @returns Node
      */
-    static getRangeCommonParent(index?: number): Node;
+    static getRangeCommonParent(index?: number): Node | undefined;
     /**
      * 删除选中内容
      * @param  index? range对象下标，默认0
