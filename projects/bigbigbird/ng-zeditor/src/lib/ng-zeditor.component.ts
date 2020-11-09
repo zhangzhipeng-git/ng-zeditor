@@ -708,18 +708,17 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     pannelOnPaste(e: any) {
         setTimeout(() => { this.autoActive(); });
-        if (!this.inCode) { // 不在代码区
-            this.setRangeAndEmitValue(0);
-            return;
+        if (this.inCode) { // 在代码区只获取纯文本！
+            const obj = CommonUtil.isIE() ? window : e;
+            if (!obj.clipboardData) { return; }
+            const text = obj.clipboardData.getData('text');
+            const df = document.createDocumentFragment();
+            df.appendChild(document.createTextNode(text));
+            CursorUtil.insertNode(df);
+            e.preventDefault();
+            e.returnValue = false;
         }
-        const obj = CommonUtil.isIE() ? window : e;
-        if (!obj.clipboardData) { return; }
-        const text = obj.clipboardData.getData('text');
-        const df = document.createDocumentFragment();
-        df.appendChild(document.createTextNode(text));
-        CursorUtil.insertNode(df);
-        e.preventDefault();
-        e.returnValue = false;
+        this.setRangeAndEmitValue(0);
     }
 
     /**

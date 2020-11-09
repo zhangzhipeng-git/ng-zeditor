@@ -2711,23 +2711,23 @@ class AppZeditorComponent {
          * @return {?}
          */
         () => { this.autoActive(); }));
-        if (!this.inCode) { // 不在代码区
-            this.setRangeAndEmitValue(0);
-            return;
+        if (this.inCode) { // 在代码区只获取纯文本！
+            // 在代码区只获取纯文本！
+            /** @type {?} */
+            const obj = CommonUtil.isIE() ? window : e;
+            if (!obj.clipboardData) {
+                return;
+            }
+            /** @type {?} */
+            const text = obj.clipboardData.getData('text');
+            /** @type {?} */
+            const df = document.createDocumentFragment();
+            df.appendChild(document.createTextNode(text));
+            CursorUtil.insertNode(df);
+            e.preventDefault();
+            e.returnValue = false;
         }
-        /** @type {?} */
-        const obj = CommonUtil.isIE() ? window : e;
-        if (!obj.clipboardData) {
-            return;
-        }
-        /** @type {?} */
-        const text = obj.clipboardData.getData('text');
-        /** @type {?} */
-        const df = document.createDocumentFragment();
-        df.appendChild(document.createTextNode(text));
-        CursorUtil.insertNode(df);
-        e.preventDefault();
-        e.returnValue = false;
+        this.setRangeAndEmitValue(0);
     }
     /**
      * 输入时记住光变位置 && input事件发射value && 记住输入
