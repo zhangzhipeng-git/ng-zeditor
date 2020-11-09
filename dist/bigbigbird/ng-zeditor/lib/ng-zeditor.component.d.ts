@@ -40,6 +40,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
             value: string;
         };
     };
+    vhtml$: string;
     /** 传入的html */
     vhtml: string;
     onInput: EventEmitter<string>;
@@ -143,10 +144,6 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      * 初始化默认格式
      */
     initFormatData(): void;
-    /**
-     * 如果面板不聚焦则使面板聚焦
-     */
-    pannelFocus(): void;
     /**
      * 设置字样
      * @param e 事件
@@ -340,6 +337,10 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      */
     emitContent(): void;
     /**
+     * 如果面板不聚焦则使面板聚焦
+     */
+    pannelFocus(): void;
+    /**
      * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
      */
     private recoverRange;
@@ -402,7 +403,7 @@ export declare class AppZeditorComponent implements ControlValueAccessor, OnInit
      * 判断范围Range是否和代码区有交集
      * @returns true - 有交集，false - 无交集
      */
-    private isRangeInCode;
+    private detectCode;
     /**
      * toast提示
      * @param  text? toast提示 默认为‘设置无效~’

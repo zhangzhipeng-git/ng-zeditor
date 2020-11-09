@@ -11,7 +11,7 @@
  */
 
 // tslint:disable-next-line: max-line-length
-import { Component, Input, ViewChild, OnInit, ElementRef, Renderer2, Output, EventEmitter, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ViewChild, OnInit, ElementRef, Renderer2, Output, EventEmitter, forwardRef, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { WindowOptions } from './_alert/window/window';   // 窗体弹窗
 import { UILinkComponent } from './ui-link/ui-link';      // 超链接UI组件
@@ -55,7 +55,10 @@ interface Options {
         useExisting: forwardRef(() => AppZeditorComponent),
         multi: true
     }],
-    encapsulation: ViewEncapsulation.None
+    // 没有Shadow Dom，样式没有封装，全局可以使用。
+    encapsulation: ViewEncapsulation.None,
+    // 只会在input引用值改变时才去做变更检测
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     @Input()
@@ -75,7 +78,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         return this.pannelRef.nativeElement;
     }
     get footer(): HTMLElement {
-        return (this.footerRef || {nativeElement: {offsetHeight: 0}}).nativeElement;
+        return (this.footerRef || { nativeElement: { offsetHeight: 0 } }).nativeElement;
     }
     get fontNameEl(): HTMLElement {
         return this.fontNameRef.nativeElement;
@@ -115,8 +118,17 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         fontSize: { key: 'small', value: '2', value$: '' },
         fontFamily: { key: '微软雅黑', value: 'Microsoft Yahei' }
     };
+    vhtml$: string = '<p>请输入内容~</p>';
     /** 传入的html */
-    @Input() vhtml = '<p>请输入内容~</p>';
+    @Input()
+    set vhtml(v: string) {
+        this.vhtml$ = v;
+        this.range = null;
+        this.inCode = false;
+    }
+    get vhtml() {
+        return this.vhtml$;
+    }
     // tslint:disable-next-line: no-output-on-prefix
     @Output() onInput: EventEmitter<string> = new EventEmitter<string>();
     /** 是否有按钮 */
@@ -230,15 +242,6 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     }
 
     /**
-     * 如果面板不聚焦则使面板聚焦
-     */
-    pannelFocus() {
-        if (document.activeElement !== this.pannel) {
-            this.pannel.focus();
-        }
-    }
-
-    /**
      * 设置字样
      * @param e 事件
      */
@@ -326,9 +329,8 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         const html = `<pre style="white-space:pre;" title="代码区"><code class="${code}"><p id="${id}"><br/></p></code></pre><p><br/></p>`;
         this.cmd('insertHTML', false, html);
         // 插入html后，将光标移至代码区的p标签中
-        // tslint:disable-next-line: no-angle-bracket-type-assertion
-        CursorUtil.setSelectionToElement(<any>(CommonUtil.id(id)), true);
-        this.setRange(); // 手动记录一下光标位置
+        CursorUtil.setSelectionToElement((CommonUtil.id(id)), true);
+        this.detectCode();
     }
 
     /**
@@ -385,11 +387,12 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     setScript(e: Event, cmd: 'superscript' | 'subscript') {
         this.ensureFocus(e);
-        if (this.scriptActive === cmd) {
+        if (this.scriptActive === cmd) { // 取消上/下标
             this.cmd(cmd, false, '');
             this.scriptActive = '';
             return;
         }
+        // 设置上/下标
         this.scriptActive = cmd;
         this.cmd(cmd, false, '');
     }
@@ -582,8 +585,16 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     history(e: Event) {
         this.ensureFocus(e);
         this.vhtml = window.localStorage.getItem('editor_input') || '';
-        this.autoActive();
-        this.setRangeAndEmitValue(0);
+        setTimeout(() => {
+            // 重设光标
+            CursorUtil.setSelectionToElement(this.pannel, false);
+            this.setRange();
+            this.autoActive();
+        });
+        // 1.发射innerHTML,input事件接收
+        this.onInput.emit(this.vhtml);
+        // 2.触发ngModelChange事件
+        this.onChange(this.vhtml);
     }
 
     /**
@@ -669,7 +680,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     keyup(e: Event | any) {
         this.setRange();
-        if (this.isRangeInCode()) { return; }
+        if (this.detectCode()) { return; }
         // tslint:disable-next-line: deprecation
         e = e || window.event;
         const key = e.keyCode || e.which || e.charCode;
@@ -687,6 +698,9 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         this.initEdit();
         this.setRange();
         this.autoActive();
+        // 点击后检测是否在代码区内，光标在click后出现，
+        // 所以这里需要设置延时任务触发检测。
+        setTimeout(() => this.detectCode());
     }
 
     /**
@@ -694,18 +708,18 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      */
     pannelOnPaste(e: any) {
         setTimeout(() => { this.autoActive(); });
-        if (!this.isRangeInCode()) {
-            // tslint:disable-next-line: no-angle-bracket-type-assertion
-            const obj = <any> CommonUtil.isIE() ? window : e;
-            if (!obj.clipboardData) { return; }
-            const text = obj.clipboardData.getData('text');
-            const df = document.createDocumentFragment();
-            df.appendChild(document.createTextNode(text));
-            CursorUtil.insertNode(df);
-            e.preventDefault();
-            e.returnValue = false;
+        if (!this.inCode) { // 不在代码区
+            this.setRangeAndEmitValue(0);
+            return;
         }
-        this.setRangeAndEmitValue(0);
+        const obj = CommonUtil.isIE() ? window : e;
+        if (!obj.clipboardData) { return; }
+        const text = obj.clipboardData.getData('text');
+        const df = document.createDocumentFragment();
+        df.appendChild(document.createTextNode(text));
+        CursorUtil.insertNode(df);
+        e.preventDefault();
+        e.returnValue = false;
     }
 
     /**
@@ -763,14 +777,21 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
     }
 
     /**
+     * 如果面板不聚焦则使面板聚焦
+     */
+    pannelFocus() {
+        if (document.activeElement !== this.pannel) {
+            this.pannel.focus();
+        }
+    }
+
+    /**
      * 确保编辑面板聚焦，设置编辑面板上次光标为当前光标
      */
     private recoverRange() {
         if (!this.pannel) { return; }
         // 确保编辑面板先是聚焦的
-        if (document.activeElement !== this.pannel) {
-            this.pannel.focus();
-        }
+        this.pannelFocus();
         if (this.range) { // 存在上次光标，则设置上次光标
             CursorUtil.setFirstRange(this.range);
             return;
@@ -814,13 +835,13 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         if (!this.isInEditStatus) {
             this.isInEditStatus = true;
         }
-        // 在代码区不设置默认格式
-        if (this.isRangeInCode()) {
-            return;
-        }
         // 如果光标周围有内容则不设置默认格式
         const el = CursorUtil.getRangeCommonParent();
         if (!el || el.nodeType === 3) {
+            return;
+        }
+        // 在代码区不设置默认格式
+        if (this.inCode) {
             return;
         }
         // 如果没有内容，则格式化默认格式
@@ -869,7 +890,8 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      * @returns true-设置成功，false-设置失败
      */
     private cmd(k: string, ui: boolean, v?: any) {
-        if (!this.isSupport(k)) {
+        if (!this.isSupport(k)) { // 不支持该命令
+            // 尝试兼容命令
             if ('insertHTML' === k) { return this.insertHTML(v); }
             this.toast('系统不支持该命令~');
             return false;
@@ -877,7 +899,7 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         const r = document.execCommand(k, ui, v || '');
         // 执行完以下命令后，非代码区内需要自动检测文字格式（样式）
         const blackList = 'redo,undo,delete,insertHTML,insertHorizontalRule,insertUnorderedList,insertOrderedList';
-        if (r && blackList.indexOf(k) > -1 && !this.isRangeInCode()) {
+        if (r && blackList.indexOf(k) > -1 && !this.inCode) {
             this.autoActive();
         }
         return r;
@@ -887,11 +909,6 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      * input,click,selectionchange事件记录编辑面板光标位置
      */
     private setRange() {
-        if (this.isRangeInCode()) {
-            this.inCode = true;
-        } else {
-            this.inCode = false;
-        }
         this.range = CursorUtil.getRange(0, this.pannel);
     }
 
@@ -905,11 +922,10 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
         // 如果选取对象的节点是文本节点，则将p变为其父节点
         // tslint:disable-next-line: no-angle-bracket-type-assertion
         if (p.nodeName === '#text') { p = <HTMLElement>p.parentNode; }
-        if (!p) {return; }
+        if (!p) { return; }
         // 段落格式
         this.grandChildTograndParent(p, (e: HTMLElement) => {
             if (e === this.pannel) {
-                this.cmd('formatBlock', false, 'p');
                 this.formatBlock = AppZeditorComponent.FORMAT.formatBlock;
                 return true;
             }
@@ -1096,13 +1112,13 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
      * 判断范围Range是否和代码区有交集
      * @returns true - 有交集，false - 无交集
      */
-    private isRangeInCode(): boolean {
+    private detectCode(): boolean {
         this.pannelFocus();
         let parent = CursorUtil.getRangeCommonParent() as any;
         if (!parent) { return false; }
         // 如果是文本节点则找其父元素
         if (parent.nodeType === 3) { parent = parent.parentNode; }
-        return (() => { // 被包含
+        return this.inCode = (() => { // 被包含
             let parent$ = parent;
             // tslint:disable-next-line: no-conditional-assignment
             while (parent$ = parent$.parentNode) {
@@ -1115,8 +1131,20 @@ export class AppZeditorComponent implements ControlValueAccessor, OnInit {
             }
             return false;
         })() || (() => { // 包含
-            const nodes = parent.querySelectorAll('code');
-            return nodes && nodes.length;
+            const range = CursorUtil.getRange(0) as any;
+            if (range.cloneContents) { // 新标准
+                const ele = range.cloneContents();
+                const childs = CommonUtil.getAllChilds(ele);
+                for (let i = 0, len = childs.length; i < len; i++) {
+                    if (childs[i].nodeName === 'CODE') {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            // 旧标准
+            const html = range.htmlText || '';
+            return /<code|<\/code>/.test(html);
         })();
     }
 
